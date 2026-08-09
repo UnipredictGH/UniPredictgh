@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UniPredict Admin</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#0f0f1a;color:#e2e8f0;min-height:100vh}
+h1{font-size:20px;padding:20px;background:#161625;border-bottom:1px solid rgba(255,255,255,.1)}
+h1 span{background:linear-gradient(135deg,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tabs{display:flex;gap:4px;padding:12px 20px;background:#161625;border-bottom:1px solid rgba(255,255,255,.1);flex-wrap:wrap}
+.tab{padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:#94a3b8;border:1px solid transparent}
+.tab:hover{color:#fff;background:rgba(124,58,237,.1)}
+.tab.on{background:#7C3AED;color:#fff}
+.page{display:none;padding:20px;max-width:1100px}
+.page.on{display:block}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+.btn-p{background:linear-gradient(135deg,#7C3AED,#EC4899);color:#fff}
+.btn-s{background:rgba(124,58,237,.2);color:#a78bfa;border:1px solid rgba(124,58,237,.3)}
+.btn-r{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
+.btn-g{background:rgba(16,185,129,.15);color:#6ee7b7;border:1px solid rgba(16,185,129,.3)}
+.btn-o{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.3)}
+.card{background:#161625;border:1px solid rgba(255,255,255,.07);border-radius:12px;margin-bottom:14px;overflow:hidden}
+.card-head{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.card-head h3{font-size:14px;font-weight:700;color:#f1f5f9}
+.card-body{padding:18px}
+.inp{width:100%;padding:9px 12px;background:#1e1e32;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#f1f5f9;font-size:13px;font-family:Arial,sans-serif;outline:none;margin-bottom:10px}
+.inp:focus{border-color:#7C3AED}
+.ta{width:100%;padding:9px 12px;background:#1e1e32;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#f1f5f9;font-size:13px;font-family:Arial,sans-serif;outline:none;resize:vertical;min-height:70px;margin-bottom:10px}
+.sel{width:100%;padding:9px 12px;background:#1e1e32;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#f1f5f9;font-size:13px;outline:none;margin-bottom:10px}
+.lbl{font-size:12px;font-weight:600;color:#94a3b8;margin-bottom:4px;display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:8px 12px;text-align:left;font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.07)}
+td{padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.02)}
+.bg{display:inline-flex;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700}
+.bg-p{background:rgba(124,58,237,.2);color:#a78bfa}
+.bg-g{background:rgba(16,185,129,.15);color:#6ee7b7}
+.bg-r{background:rgba(239,68,68,.15);color:#fca5a5}
+.bg-o{background:rgba(245,158,11,.15);color:#fcd34d}
+.bg-b{background:rgba(59,130,246,.15);color:#93c5fd}
+.bg-gray{background:rgba(255,255,255,.08);color:#94a3b8}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:#161625;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px}
+.stat-v{font-size:28px;font-weight:900;color:#f1f5f9;line-height:1}
+.stat-l{font-size:12px;color:#94a3b8;margin-top:4px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:999;padding:20px}
+.modal-bg.on{display:flex}
+.modal{background:#161625;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:24px;width:100%;max-width:540px;max-height:88vh;overflow-y:auto;position:relative}
+.modal h3{font-size:16px;font-weight:800;color:#f1f5f9;margin-bottom:16px}
+.mcls{position:absolute;top:14px;right:16px;background:none;border:none;color:#475569;font-size:20px;cursor:pointer}
+.toast-wrap{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{background:#1e1e32;border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:10px 14px;font-size:13px;color:#f1f5f9;min-width:200px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.row:last-child{border-bottom:none}
+.row h4{font-size:13px;font-weight:600;color:#f1f5f9}
+.row p{font-size:11.5px;color:#475569;margin-top:2px}
+.tog{width:42px;height:22px;background:rgba(255,255,255,.1);border-radius:99px;cursor:pointer;position:relative;border:none;display:inline-block;vertical-align:middle}
+.tog.on{background:#7C3AED}
+.tog-d{width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:left .15s;pointer-events:none}
+.tog.on .tog-d{left:23px}
+.srch{position:relative;margin-bottom:12px}
+.srch input{padding-left:32px}
+.srch::before{content:"🔍";position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:12px;pointer-events:none}
+</style>
+</head>
+<body>
+
+<h1><span>UniPredict Ghana</span> — Admin Panel</h1>
+
+<div class="tabs">
+  <div class="tab on" data-id="dash" onclick="tab('dash')">📊 Dashboard</div>
+  <div class="tab" data-id="unis" onclick="tab('unis')">🏛️ Universities</div>
+  <div class="tab" data-id="progs" onclick="tab('progs')">📚 Programmes</div>
+  <div class="tab" data-id="ai" onclick="tab('ai')">🤖 AI Inbox</div>
+  <div class="tab" data-id="schols" onclick="tab('schols')">🎓 Scholarships</div>
+  <div class="tab" data-id="news" onclick="tab('news')">📰 News</div>
+  <div class="tab" data-id="forms" onclick="tab('forms')">📝 Forms</div>
+  <div class="tab" data-id="anns" onclick="tab('anns')">📢 Announcements</div>
+  <div class="tab" data-id="pays" onclick="tab('pays')">💳 Payments</div>
+  <div class="tab" data-id="users" onclick="tab('users')">👥 Users</div>
+  <div class="tab" data-id="appear" onclick="tab('appear')">🎨 Appearance</div>
+  <div class="tab" data-id="text" onclick="tab('text')">✏️ Site Text</div>
+  <div class="tab" data-id="feats" onclick="tab('feats')">🔧 Toggles</div>
+  <div class="tab" data-id="pstack" onclick="tab('pstack')">🔑 Paystack</div>
+</div>
+
+<!-- DASHBOARD -->
+
+<div id="pg-dash" class="page on">
+  <div class="stats">
+    <div class="stat"><div class="stat-v" id="d-unis">—</div><div class="stat-l">🏛️ Universities</div></div>
+    <div class="stat"><div class="stat-v" id="d-progs">—</div><div class="stat-l">📚 Programmes</div></div>
+    <div class="stat"><div class="stat-v" id="d-users">—</div><div class="stat-l">👥 Users</div></div>
+    <div class="stat"><div class="stat-v" id="d-rev">—</div><div class="stat-l">💰 Revenue</div></div>
+    <div class="stat"><div class="stat-v" id="d-pend">—</div><div class="stat-l">⏳ Pending Payments</div></div>
+    <div class="stat"><div class="stat-v" id="d-ai">—</div><div class="stat-l">🤖 AI Unanswered</div></div>
+  </div>
+  <div class="card"><div class="card-head"><h3>Quick Actions</h3></div>
+  <div class="card-body" style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn btn-p" onclick="tab('unis')">🏛️ Universities</button>
+    <button class="btn btn-s" onclick="tab('progs')">📚 Programmes</button>
+    <button class="btn btn-s" onclick="tab('ai')">🤖 AI Inbox</button>
+    <button class="btn btn-s" onclick="tab('pays')">💳 Payments</button>
+    <button class="btn btn-s" onclick="tab('appear')">🎨 Appearance</button>
+    <button class="btn btn-s" onclick="tab('pstack')">🔑 Paystack Keys</button>
+    <button class="btn btn-s" onclick="tab('feats')">🔧 Toggles</button>
+    <button class="btn btn-s" onclick="tab('text')">✏️ Edit Text</button>
+  </div></div>
+  <p style="font-size:12px;color:#475569;margin-top:12px">Connected to Supabase · <a href="https://uni-predict.netlify.app" target="_blank" style="color:#7C3AED">View Student Site ↗</a></p>
+</div>
+
+<!-- UNIVERSITIES -->
+
+<div id="pg-unis" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <h2 style="font-size:17px;font-weight:800;color:#f1f5f9">Universities</h2>
+    <button class="btn btn-p" onclick="uniModal(null)">+ Add University</button>
+  </div>
+  <div class="srch"><input class="inp" style="margin:0" placeholder="Search universities..." oninput="uniSearch(this.value)"/></div>
+  <div class="card"><table><thead><tr><th>Code</th><th>Name</th><th>Type</th><th>Region</th><th>Status</th><th>Progs</th><th>Actions</th></tr></thead>
+  <tbody id="uni-tb"><tr><td colspan="7" style="text-align:center;padding:30px;color:#475569">Loading...</td></tr></tbody></table></div>
+</div>
+
+<!-- PROGRAMMES -->
+
+<div id="pg-progs" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <h2 style="font-size:17px;font-weight:800;color:#f1f5f9">Programmes</h2>
+    <button class="btn btn-p" onclick="progModal(null)">+ Add Programme</button>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+    <div class="srch" style="flex:1;min-width:180px;margin:0"><input class="inp" style="margin:0" id="psearch" placeholder="Search..." oninput="progFilter()"/></div>
+    <select class="sel" id="puf" style="width:180px;margin:0" onchange="progFilter()"><option value="">All Universities</option></select>
+    <select class="sel" id="pdf" style="width:120px;margin:0" onchange="progFilter()"><option value="">All Degrees</option>
+      <option>BSc</option><option>BA</option><option>BEd</option><option>BTech</option><option>BBA</option><option>LLB</option><option>MBChB</option><option>HND</option><option>Diploma</option><option>Certificate</option>
+    </select>
+  </div>
+  <p id="prog-ct" style="font-size:12px;color:#475569;margin-bottom:10px">Loading...</p>
+  <div class="card"><table><thead><tr><th>Uni</th><th>Programme</th><th>Degree</th><th>Cutoff</th><th>Fee</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody id="prog-tb"><tr><td colspan="7" style="text-align:center;padding:30px;color:#475569">Loading...</td></tr></tbody></table>
+  <div id="prog-pag" style="padding:10px 14px;border-top:1px solid rgba(255,255,255,.07)"></div></div>
+</div>
+
+<!-- AI INBOX -->
+
+<div id="pg-ai" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div><h2 style="font-size:17px;font-weight:800;color:#f1f5f9">AI Counsellor Inbox</h2>
+    <p style="font-size:12px;color:#475569;margin-top:4px">Questions the AI couldn't answer — reply here and the student sees it instantly</p></div>
+    <div style="display:flex;gap:8px">
+      <select class="sel" id="ai-fil" style="width:130px;margin:0" onchange="loadAI()"><option value="pending">Unanswered</option><option value="answered">Answered</option><option value="">All</option></select>
+      <button class="btn btn-s" onclick="loadAI()">🔄 Refresh</button>
+    </div>
+  </div>
+  <div id="ai-list"><p style="color:#475569">Loading...</p></div>
+</div>
+
+<!-- SCHOLARSHIPS -->
+
+<div id="pg-schols" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <h2 style="font-size:17px;font-weight:800;color:#f1f5f9">Scholarships</h2>
+    <button class="btn btn-p" onclick="scholModal(null)">+ Add</button>
+  </div>
+  <div id="schol-list"><p style="color:#475569">Loading...</p></div>
+</div>
+
+<!-- NEWS -->
+
+<div id="pg-news" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <h2 style="font-size:17px;font-weight:800;color:#f1f5f9">News & Updates</h2>
+    <button class="btn btn-p" onclick="newsModal(null)">+ Add News</button>
+  </div>
+  <div id="news-list"><p style="color:#475569">Loading...</p></div>
+</div>
+
+<!-- FORMS -->
+
+<div id="pg-forms" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <h2 style="font-size:17px;font-weight:800;color:#f1f5f9">Admission Forms</h2>
+    <button class="btn btn-p" onclick="formModal(null)">+ Add Form</button>
+  </div>
+  <div id="forms-list"><p style="color:#475569">Loading...</p></div>
+</div>
+
+<!-- ANNOUNCEMENTS -->
+
+<div id="pg-anns" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <h2 style="font-size:17px;font-weight:800;color:#f1f5f9">Announcements</h2>
+    <button class="btn btn-p" onclick="annModal(null)">+ Add</button>
+  </div>
+  <div id="ann-list"><p style="color:#475569">Loading...</p></div>
+</div>
+
+<!-- PAYMENTS -->
+
+<div id="pg-pays" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div><h2 style="font-size:17px;font-weight:800;color:#f1f5f9">Payments</h2>
+    <p id="pay-sum" style="font-size:12px;color:#475569;margin-top:4px">Loading...</p></div>
+    <select class="sel" id="pay-fil" style="width:130px;margin:0" onchange="loadPays()"><option value="">All</option><option value="success">Successful</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="refunded">Refunded</option></select>
+  </div>
+  <div class="card"><table><thead><tr><th>Date</th><th>User</th><th>Amount</th><th>Ref</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody id="pay-tb"><tr><td colspan="6" style="text-align:center;padding:30px;color:#475569">Loading...</td></tr></tbody></table></div>
+</div>
+
+<!-- USERS -->
+
+<div id="pg-users" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div><h2 style="font-size:17px;font-weight:800;color:#f1f5f9">Users</h2>
+    <p id="user-ct" style="font-size:12px;color:#475569;margin-top:4px">Loading...</p></div>
+    <div class="srch" style="margin:0;width:200px"><input class="inp" style="margin:0" placeholder="Search..." oninput="userSearch(this.value)"/></div>
+  </div>
+  <div class="card"><table><thead><tr><th>Name</th><th>Email</th><th>Joined</th><th>Paid</th><th>Checks</th><th>Actions</th></tr></thead>
+  <tbody id="user-tb"></tbody></table></div>
+</div>
+
+<!-- APPEARANCE -->
+
+<div id="pg-appear" class="page">
+  <h2 style="font-size:17px;font-weight:800;color:#f1f5f9;margin-bottom:16px">🎨 Appearance</h2>
+  <div class="card"><div class="card-head"><h3>Colors</h3></div><div class="card-body">
+    <div class="g2">
+      <div><label class="lbl">Primary Color</label><div style="display:flex;gap:8px"><input type="color" id="c1" value="#7C3AED" style="width:40px;height:36px;border:1px solid rgba(255,255,255,.1);border-radius:6px;cursor:pointer;background:none;padding:2px" oninput="updGrad()"/><input class="inp" style="margin:0;flex:1" id="c1h" value="#7C3AED" oninput="document.getElementById('c1').value=this.value;updGrad()"/></div></div>
+      <div><label class="lbl">Accent Color</label><div style="display:flex;gap:8px"><input type="color" id="c2" value="#EC4899" style="width:40px;height:36px;border:1px solid rgba(255,255,255,.1);border-radius:6px;cursor:pointer;background:none;padding:2px" oninput="updGrad()"/><input class="inp" style="margin:0;flex:1" id="c2h" value="#EC4899" oninput="document.getElementById('c2').value=this.value;updGrad()"/></div></div>
+      <div><label class="lbl">Background</label><div style="display:flex;gap:8px"><input type="color" id="c3" value="#0f0f1a" style="width:40px;height:36px;border:1px solid rgba(255,255,255,.1);border-radius:6px;cursor:pointer;background:none;padding:2px"/><input class="inp" style="margin:0;flex:1" id="c3h" value="#0f0f1a" oninput="document.getElementById('c3').value=this.value"/></div></div>
+      <div><label class="lbl">Card Color</label><div style="display:flex;gap:8px"><input type="color" id="c4" value="#161625" style="width:40px;height:36px;border:1px solid rgba(255,255,255,.1);border-radius:6px;cursor:pointer;background:none;padding:2px"/><input class="inp" style="margin:0;flex:1" id="c4h" value="#161625" oninput="document.getElementById('c4').value=this.value"/></div></div>
+    </div>
+    <div id="gp" style="height:36px;border-radius:8px;background:linear-gradient(135deg,#7C3AED,#EC4899);margin-bottom:14px"></div>
+    <button class="btn btn-p" onclick="saveColors()">💾 Save Colors</button>
+  </div></div>
+  <div class="card"><div class="card-head"><h3>Fonts</h3></div><div class="card-body">
+    <div class="g2">
+      <div><label class="lbl">Heading Font</label><select class="sel" id="fh"><option>Outfit</option><option>Inter</option><option>Poppins</option><option>Space Grotesk</option></select></div>
+      <div><label class="lbl">Body Font</label><select class="sel" id="fb"><option>Inter</option><option>Outfit</option><option>Poppins</option><option>DM Sans</option></select></div>
+    </div>
+    <button class="btn btn-p" onclick="saveFonts()">💾 Save Fonts</button>
+  </div></div>
+</div>
+
+<!-- SITE TEXT -->
+
+<div id="pg-text" class="page">
+  <h2 style="font-size:17px;font-weight:800;color:#f1f5f9;margin-bottom:16px">✏️ Edit Site Text</h2>
+  <div class="card"><div class="card-head"><h3>🏠 Hero Section</h3></div><div class="card-body">
+    <label class="lbl">Main Title</label><input class="inp" id="t-hero_title" placeholder="PREDICT. MATCH. ACHIEVE."/>
+    <label class="lbl">Subtitle</label><input class="inp" id="t-hero_sub" placeholder="Ghana's #1 University Eligibility Checker"/>
+    <label class="lbl">Description</label><textarea class="ta" id="t-hero_desc" placeholder="Find out which universities..."></textarea>
+    <div class="g2"><div><label class="lbl">Primary Button</label><input class="inp" id="t-btn1" placeholder="Check My Eligibility"/></div>
+    <div><label class="lbl">Secondary Button</label><input class="inp" id="t-btn2" placeholder="Browse Universities"/></div></div>
+    <button class="btn btn-p" onclick="saveST(['hero_title','hero_sub','hero_desc','btn1','btn2'])">💾 Save Hero</button>
+  </div></div>
+  <div class="card"><div class="card-head"><h3>📞 Contact & Branding</h3></div><div class="card-body">
+    <div class="g2">
+      <div><label class="lbl">Site Name</label><input class="inp" id="t-sitename" placeholder="UniPredict Ghana"/></div>
+      <div><label class="lbl">Tagline</label><input class="inp" id="t-tagline" placeholder="PREDICT. MATCH. ACHIEVE."/></div>
+      <div><label class="lbl">WhatsApp</label><input class="inp" id="t-whatsapp" placeholder="0537889150"/></div>
+      <div><label class="lbl">Email</label><input class="inp" id="t-email" placeholder="UniPredictghana@gmail.com"/></div>
+      <div><label class="lbl">Facebook URL</label><input class="inp" id="t-facebook" placeholder="https://..."/></div>
+      <div><label class="lbl">Instagram URL</label><input class="inp" id="t-instagram" placeholder="https://..."/></div>
+      <div><label class="lbl">Twitter URL</label><input class="inp" id="t-twitter" placeholder="https://..."/></div>
+      <div><label class="lbl">TikTok URL</label><input class="inp" id="t-tiktok" placeholder="https://..."/></div>
+    </div>
+    <button class="btn btn-p" onclick="saveST(['sitename','tagline','whatsapp','email','facebook','instagram','twitter','tiktok'])">💾 Save Contact</button>
+  </div></div>
+  <div class="card"><div class="card-head"><h3>💳 Pricing</h3></div><div class="card-body">
+    <div class="g2">
+      <div><label class="lbl">Price (GHC)</label><input class="inp" id="t-price" type="number" placeholder="20"/></div>
+      <div><label class="lbl">Price Description</label><input class="inp" id="t-price_desc" placeholder="Full access · 1 year"/></div>
+    </div>
+    <label class="lbl">What You Get (one per line)</label>
+    <textarea class="ta" id="t-perks" placeholder="✅ Unlimited eligibility checks&#10;✅ AI Counsellor"></textarea>
+    <button class="btn btn-p" onclick="saveST(['price','price_desc','perks'])">💾 Save Pricing</button>
+  </div></div>
+  <div class="card"><div class="card-head"><h3>🦶 Footer</h3></div><div class="card-body">
+    <label class="lbl">Footer Tagline</label><input class="inp" id="t-footer_tag" placeholder="Empowering Ghanaian Students"/>
+    <label class="lbl">Copyright</label><input class="inp" id="t-copyright" placeholder="© 2025 UniPredict Ghana"/>
+    <button class="btn btn-p" onclick="saveST(['footer_tag','copyright'])">💾 Save Footer</button>
+  </div></div>
+</div>
+
+<!-- FEATURES -->
+
+<div id="pg-feats" class="page">
+  <h2 style="font-size:17px;font-weight:800;color:#f1f5f9;margin-bottom:16px">🔧 Features & Toggles</h2>
+  <div class="card"><div class="card-body" id="feat-body"><p style="color:#475569">Loading...</p></div></div>
+</div>
+
+<!-- PAYSTACK -->
+
+<div id="pg-pstack" class="page">
+  <h2 style="font-size:17px;font-weight:800;color:#f1f5f9;margin-bottom:16px">🔑 Paystack Keys</h2>
+  <div class="card"><div class="card-head"><h3>Keys</h3><span id="pk-badge" style="font-size:12px;font-weight:700;color:#fcd34d">⚙️ Test Mode</span></div><div class="card-body">
+    <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:12px;margin-bottom:14px;font-size:13px;color:#fcd34d">⚠️ Only Public Key is used on student site. Keep secret keys private.</div>
+    <p style="font-size:12px;font-weight:700;color:#475569;text-transform:uppercase;margin-bottom:8px">🧪 Test Keys</p>
+    <label class="lbl">Test Public Key</label><input class="inp" id="pk-tp" placeholder="pk_test_..."/>
+    <label class="lbl">Test Secret Key</label><input class="inp" id="pk-ts" type="password" placeholder="sk_test_..."/>
+    <p style="font-size:12px;font-weight:700;color:#475569;text-transform:uppercase;margin:12px 0 8px">🟢 Live Keys</p>
+    <label class="lbl">Live Public Key</label><input class="inp" id="pk-lp" placeholder="pk_live_..."/>
+    <label class="lbl">Live Secret Key</label><input class="inp" id="pk-ls" type="password" placeholder="sk_live_..."/>
+    <div class="row" style="margin:12px 0">
+      <div><h4>Use Live Keys</h4><p>Switch on when Paystack account is approved</p></div>
+      <button class="tog" id="pk-tog" onclick="pkToggle(this)"><div class="tog-d"></div></button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-p" onclick="pkSave()">💾 Save Keys</button>
+      <button class="btn btn-s" onclick="pkLoad()">↺ Reload</button>
+    </div>
+  </div></div>
+  <div class="card"><div class="card-head"><h3>💰 Subscription Price</h3></div><div class="card-body">
+    <div class="g2">
+      <div><label class="lbl">Price (GHC)</label><input class="inp" id="sub-p" type="number" placeholder="20"/></div>
+      <div><label class="lbl">Currency</label><select class="sel" id="sub-c"><option value="GHS">GHS</option><option value="USD">USD</option></select></div>
+    </div>
+    <button class="btn btn-p" onclick="subSave()">💾 Save Price</button>
+  </div></div>
+</div>
+
+<!-- MODAL -->
+
+<div class="modal-bg" id="modal"><div class="modal"><button class="mcls" onclick="closeModal()">✕</button><div id="modal-body"></div></div></div>
+<div class="toast-wrap" id="toasts"></div>
+
+<script>
+var SB="https://urfqevstrwsrtysbllah.supabase.co";
+var SK="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyZnFldnN0cndzcnR5c2JsbGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzNTQ5OTQsImV4cCI6MjEwMDkzMDk5NH0.9TPgghMQdHjqwRm51dEVHJ6O115FPBoYBfZHO_siTYI";
+function H(){return{"apikey":SK,"Authorization":"Bearer "+SK,"Content-Type":"application/json"};}
+function GET(t,q){return fetch(SB+"/rest/v1/"+t+"?"+(q||"")+"&limit=1000",{headers:H()}).then(r=>r.json());}
+function POST(t,b){return fetch(SB+"/rest/v1/"+t,{method:"POST",headers:Object.assign(H(),{"Prefer":"return=representation"}),body:JSON.stringify(b)}).then(r=>r.json());}
+function PATCH(t,id,b){return fetch(SB+"/rest/v1/"+t+"?id=eq."+id,{method:"PATCH",headers:Object.assign(H(),{"Prefer":"return=representation"}),body:JSON.stringify(b)}).then(r=>r.json());}
+function DEL(t,id){return fetch(SB+"/rest/v1/"+t+"?id=eq."+id,{method:"DELETE",headers:H()});}
+function SGet(k){return fetch(SB+"/rest/v1/settings?key=eq."+k+"&select=value",{headers:H()}).then(r=>r.json()).then(d=>d&&d[0]?d[0].value:null);}
+function SSet(k,v){return fetch(SB+"/rest/v1/settings?key=eq."+k,{method:"PATCH",headers:Object.assign(H(),{"Prefer":"return=representation"}),body:JSON.stringify({value:v,updated_at:new Date().toISOString()})}).then(r=>r.json()).then(d=>{if(!d||!d.length)return POST("settings",{key:k,value:v});return d;});}
+
+function toast(msg,type){var e=document.createElement("div");e.className="toast";e.style.borderLeft="3px solid "+(type==="success"?"#10b981":type==="error"?"#ef4444":"#7C3AED");e.textContent=msg;document.getElementById("toasts").appendChild(e);setTimeout(()=>e.remove(),3000);}
+function openModal(h){document.getElementById("modal-body").innerHTML=h;document.getElementById("modal").classList.add("on");}
+function closeModal(){document.getElementById("modal").classList.remove("on");}
+
+var _cur="dash";
+function tab(id){
+  document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("on");});
+  var active=document.querySelector(".tab[data-id='"+id+"']");
+  if(active)active.classList.add("on");
+  document.querySelectorAll(".page").forEach(function(p){p.classList.remove("on");});
+  var pg=document.getElementById("pg-"+id);
+  if(pg)pg.classList.add("on");
+  _cur=id;
+  var fns={unis:loadUnis,progs:loadProgs,ai:loadAI,schols:loadSchols,news:loadNews,forms:loadForms,anns:loadAnns,pays:loadPays,users:loadUsers,appear:loadAppear,text:loadText,feats:loadFeats,pstack:pkLoad};
+  if(fns[id])fns[id]();
+}
+
+// DASHBOARD STATS
+function loadDash(){
+  GET("universities","active=eq.true&select=id").then(d=>{var e=document.getElementById("d-unis");if(e)e.textContent=(d||[]).length;}).catch(()=>{});
+  GET("programmes","active=eq.true&select=id").then(d=>{var e=document.getElementById("d-progs");if(e)e.textContent=(d||[]).length;}).catch(()=>{});
+  GET("payments","status=eq.success&select=amount").then(d=>{var e=document.getElementById("d-rev");if(e)e.textContent="GHC "+Math.round((d||[]).reduce((s,x)=>s+(x.amount||0),0)/100);}).catch(()=>{});
+  GET("payments","status=eq.pending&select=id").then(d=>{var e=document.getElementById("d-pend");if(e)e.textContent=(d||[]).length;}).catch(()=>{});
+  GET("profiles","select=id").then(d=>{var e=document.getElementById("d-users");if(e)e.textContent=(d||[]).length;}).catch(()=>{var e=document.getElementById("d-users");if(e)e.textContent="—";});
+  GET("ai_inbox","status=eq.pending&select=id").then(d=>{var e=document.getElementById("d-ai");if(e)e.textContent=(d||[]).length;}).catch(()=>{});
+}
+
+// UNIVERSITIES
+var _unis=[],_pcounts={};
+function loadUnis(){
+  Promise.all([GET("universities","order=name.asc&select=*"),GET("programmes","select=university_id")]).then(([unis,progs])=>{
+    _unis=unis||[];_pcounts={};(progs||[]).forEach(p=>_pcounts[p.university_id]=(_pcounts[p.university_id]||0)+1);
+    _unis.forEach(u=>u._pc=_pcounts[u.id]||0);uniRows(_unis);
+  }).catch(()=>{var tb=document.getElementById("uni-tb");if(tb)tb.innerHTML="<tr><td colspan='7' style='text-align:center;padding:20px;color:#475569'>Error loading. Check console.</td></tr>";});
+}
+function uniRows(data){
+  var tb=document.getElementById("uni-tb");if(!tb)return;
+  if(!data.length){tb.innerHTML="<tr><td colspan='7' style='text-align:center;padding:20px;color:#475569'>None found</td></tr>";return;}
+  tb.innerHTML=data.map(u=>`<tr>
+    <td><span class="bg bg-p">${u.code}</span></td>
+    <td style="font-weight:600;color:#f1f5f9;max-width:180px">${u.name}</td>
+    <td><span class="bg ${u.type==="Public"?"bg-g":u.type==="Private"?"bg-o":"bg-b"}">${u.type||"—"}</span></td>
+    <td style="color:#94a3b8;font-size:12px">${u.region||"—"}</td>
+    <td><span class="bg ${u.active?"bg-g":"bg-r"}">${u.active?"Active":"Hidden"}</span></td>
+    <td style="color:#94a3b8">${u._pc}</td>
+    <td><div style="display:flex;gap:4px">
+      <button class="btn btn-s" style="padding:5px 10px;font-size:12px" onclick='uniModal(${JSON.stringify(u).replace(/"/g,"&quot;")})'>Edit</button>
+      <button class="btn ${u.active?"btn-o":"btn-g"}" style="padding:5px 10px;font-size:12px" onclick="uniToggle('${u.id}',${!u.active})">${u.active?"Hide":"Show"}</button>
+      <button class="btn btn-r" style="padding:5px 10px;font-size:12px" onclick="uniDel('${u.id}')">Del</button>
+    </div></td>
+  </tr>`).join("");
+}
+function uniSearch(q){uniRows(q?_unis.filter(u=>(u.name+u.code+u.region).toLowerCase().includes(q.toLowerCase())):_unis);}
+function uniToggle(id,v){PATCH("universities",id,{active:v,updated_at:new Date().toISOString()}).then(()=>{toast(v?"Shown ✅":"Hidden","success");loadUnis();});}
+function uniDel(id){if(!confirm("Delete university?"))return;DEL("universities",id).then(()=>{toast("Deleted","success");loadUnis();});}
+function uniModal(u){
+  var regs=["Greater Accra","Ashanti","Central","Eastern","Western","Western North","Volta","Oti","Northern","North East","Savannah","Upper East","Upper West","Bono","Bono East","Ahafo"];
+  openModal(`<h3>${u?"Edit":"Add"} University</h3>
+    <label class="lbl">Code</label><input class="inp" id="uc" value="${u?u.code:""}" placeholder="UCC"/>
+    <label class="lbl">Full Name</label><input class="inp" id="un" value="${u?u.name:""}" placeholder="University of Cape Coast"/>
+    <label class="lbl">Short Name</label><input class="inp" id="us" value="${u?u.short_name||"":""}" placeholder="UCC"/>
+    <div class="g2">
+      <div><label class="lbl">Type</label><select class="sel" id="ut">${["Public","Private","Technical","Distance"].map(t=>`<option ${u&&u.type===t?"selected":""}>${t}</option>`).join("")}</select></div>
+      <div><label class="lbl">Founded</label><input class="inp" id="uf" type="number" value="${u?u.founded||"":""}" placeholder="1962"/></div>
+      <div><label class="lbl">City</label><input class="inp" id="ul" value="${u?u.location||"":""}" placeholder="Cape Coast"/></div>
+      <div><label class="lbl">Region</label><select class="sel" id="ur">${regs.map(r=>`<option ${u&&u.region===r?"selected":""}>${r}</option>`).join("")}</select></div>
+    </div>
+    <label class="lbl">Website</label><input class="inp" id="uw" value="${u?u.website||"":""}" placeholder="https://ucc.edu.gh"/>
+    <div style="display:flex;gap:8px"><button class="btn btn-p" onclick="uniSave('${u?u.id:""}')">💾 Save</button><button class="btn btn-s" onclick="closeModal()">Cancel</button></div>`);
+}
+function uniSave(id){
+  var code=document.getElementById("uc").value.trim().toUpperCase(),name=document.getElementById("un").value.trim();
+  if(!code||!name){toast("Code and name required","error");return;}
+  var b={code,name,short_name:document.getElementById("us").value.trim()||code,type:document.getElementById("ut").value,location:document.getElementById("ul").value.trim(),region:document.getElementById("ur").value,founded:parseInt(document.getElementById("uf").value)||null,website:document.getElementById("uw").value.trim(),active:true,updated_at:new Date().toISOString()};
+  (id?PATCH("universities",id,b):POST("universities",b)).then(()=>{toast("Saved ✅","success");closeModal();loadUnis();}).catch(()=>toast("Error saving","error"));
+}
+
+// PROGRAMMES
+var _progs=[],_pUnis=[],_fProgs=[],_pPage=0,PER=50;
+function loadProgs(){
+  Promise.all([GET("programmes","order=created_at.desc&select=*"),GET("universities","select=id,code,name,short_name&order=name.asc")]).then(([progs,unis])=>{
+    _progs=progs||[];_fProgs=_progs;_pUnis=unis||[];_pPage=0;
+    var sel=document.getElementById("puf");
+    if(sel){while(sel.options.length>1)sel.remove(1);unis.forEach(u=>{var o=document.createElement("option");o.value=u.id;o.textContent=u.short_name||u.code;sel.appendChild(o);});}
+    progRows();var c=document.getElementById("prog-ct");if(c)c.textContent=_progs.length+" programmes total";
+  }).catch(()=>{});
+}
+function progFilter(){
+  var q=(document.getElementById("psearch")||{}).value||"";
+  var uid=(document.getElementById("puf")||{}).value||"";
+  var deg=(document.getElementById("pdf")||{}).value||"";
+  _fProgs=_progs.filter(p=>(!q||p.name.toLowerCase().includes(q.toLowerCase()))&&(!uid||p.university_id===uid)&&(!deg||p.degree===deg));
+  _pPage=0;progRows();
+}
+function progRows(){
+  var tb=document.getElementById("prog-tb");if(!tb)return;
+  var umap={};_pUnis.forEach(u=>umap[u.id]=u.short_name||u.code);
+  var sl=_fProgs.slice(_pPage*PER,(_pPage+1)*PER);
+  if(!sl.length){tb.innerHTML="<tr><td colspan='7' style='text-align:center;padding:20px;color:#475569'>No programmes found</td></tr>";document.getElementById("prog-pag").innerHTML="";return;}
+  tb.innerHTML=sl.map(p=>`<tr>
+    <td><span class="bg bg-p">${umap[p.university_id]||"?"}</span></td>
+    <td style="color:#f1f5f9;font-weight:500;max-width:200px">${p.name}</td>
+    <td><span class="bg bg-gray">${p.degree||"—"}</span></td>
+    <td style="color:#94a3b8">${p.cutoff||"—"}</td>
+    <td style="color:#94a3b8;font-size:12px;max-width:100px">${p.fee||"—"}</td>
+    <td><span class="bg ${p.active?"bg-g":"bg-r"}">${p.active?"Active":"Hidden"}</span></td>
+    <td><div style="display:flex;gap:4px">
+      <button class="btn btn-s" style="padding:5px 10px;font-size:12px" onclick='progModal(${JSON.stringify(p).replace(/"/g,"&quot;")})'>Edit</button>
+      <button class="btn ${p.active?"btn-o":"btn-g"}" style="padding:5px 10px;font-size:12px" onclick="progToggle('${p.id}',${!p.active})">${p.active?"Hide":"Show"}</button>
+      <button class="btn btn-r" style="padding:5px 10px;font-size:12px" onclick="progDel('${p.id}')">Del</button>
+    </div></td>
+  </tr>`).join("");
+  var pages=Math.ceil(_fProgs.length/PER);
+  var pag=document.getElementById("prog-pag");
+  if(pag&&pages>1)pag.innerHTML="<div style='display:flex;gap:4px;flex-wrap:wrap'>"+Array.from({length:Math.min(pages,15)},(_,i)=>`<button onclick="_pPage=${i};progRows()" style="padding:4px 9px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:${i===_pPage?"#7C3AED":"#1e1e32"};color:${i===_pPage?"#fff":"#94a3b8"};cursor:pointer;font-size:12px">${i+1}</button>`).join("")+"</div>";
+  else if(pag)pag.innerHTML="";
+}
+function progToggle(id,v){PATCH("programmes",id,{active:v}).then(()=>{var p=_progs.find(x=>x.id===id);if(p)p.active=v;progRows();toast(v?"Shown":"Hidden","success");});}
+function progDel(id){if(!confirm("Delete?"))return;DEL("programmes",id).then(()=>{_progs=_progs.filter(p=>p.id!==id);_fProgs=_fProgs.filter(p=>p.id!==id);progRows();toast("Deleted","success");});}
+function progModal(p){
+  var uOpts=_pUnis.map(u=>`<option value="${u.id}" ${p&&p.university_id===u.id?"selected":""}>${u.name}</option>`).join("");
+  openModal(`<h3>${p?"Edit":"Add"} Programme</h3>
+    <label class="lbl">University</label><select class="sel" id="pu">${uOpts}</select>
+    <label class="lbl">Programme Name</label><input class="inp" id="pn" value="${p?p.name:""}" placeholder="Computer Science"/>
+    <div class="g3">
+      <div><label class="lbl">Degree</label><select class="sel" id="pd">${["BSc","BA","BEd","BTech","BBA","LLB","MBChB","HND","Diploma","Certificate"].map(d=>`<option ${p&&p.degree===d?"selected":""}>${d}</option>`).join("")}</select></div>
+      <div><label class="lbl">Duration</label><input class="inp" id="pdu" value="${p?p.duration||"":""}" placeholder="4 years"/></div>
+      <div><label class="lbl">Cut-off</label><input class="inp" id="pc" type="number" value="${p?p.cutoff||"":""}" placeholder="24"/></div>
+    </div>
+    <label class="lbl">Required Tracks (comma separated)</label><input class="inp" id="pt" value="${p&&p.required_track?p.required_track.join(", "):""}" placeholder="General Science, Business"/>
+    <label class="lbl">Fee</label><input class="inp" id="pf" value="${p?p.fee||"":""}" placeholder="GHC 3,500+/yr"/>
+    <label class="lbl">Careers</label><textarea class="ta" id="pca">${p?p.careers||"":""}</textarea>
+
+```
+<div style="display:flex;gap:8px"><button class="btn btn-p" onclick="progSave('${p?p.id:""}')">💾 Save</button><button class="btn btn-s" onclick="closeModal()">Cancel</button></div>`);
+```
+
+}
+function progSave(id){
+var n=document.getElementById(“pn”).value.trim(),u=document.getElementById(“pu”).value;
+if(!n||!u){toast(“Name and university required”,“error”);return;}
+var tracks=document.getElementById(“pt”).value.split(”,”).map(t=>t.trim()).filter(Boolean);
+var b={university_id:u,name:n,degree:document.getElementById(“pd”).value,duration:document.getElementById(“pdu”).value.trim(),cutoff:parseInt(document.getElementById(“pc”).value)||null,required_track:tracks,fee:document.getElementById(“pf”).value.trim(),careers:document.getElementById(“pca”).value.trim(),active:true,updated_at:new Date().toISOString()};
+(id?PATCH(“programmes”,id,b):POST(“programmes”,b)).then(()=>{toast(“Saved ✅”,“success”);closeModal();loadProgs();}).catch(()=>toast(“Error”,“error”));
+}
+
+// AI INBOX
+function loadAI(){
+var st=(document.getElementById(“ai-fil”)||{}).value;
+GET(“ai_inbox”,(st?“status=eq.”+st:””)+”&order=created_at.desc&select=*”).then(msgs=>{
+var el=document.getElementById(“ai-list”);if(!el)return;
+if(!msgs||!msgs.length){el.innerHTML=”<div style='text-align:center;padding:40px;color:#475569'><div style='font-size:36px;margin-bottom:8px'>🤖</div><p>No questions yet.</p></div>”;return;}
+el.innerHTML=msgs.map(m=>`<div class="card" style="margin-bottom:10px"><div class="card-body"> <div style="display:flex;justify-content:space-between;margin-bottom:8px"> <span class="bg ${m.status==="pending"?"bg-r":"bg-g"}">${m.status==="pending"?"⏳ Unanswered":"✅ Answered"}</span> <span style="font-size:11px;color:#475569">${new Date(m.created_at).toLocaleString()}</span> </div> <p style="font-size:13.5px;color:#f1f5f9;margin-bottom:6px;line-height:1.5">💬 "${m.question}"</p> <p style="font-size:11.5px;color:#475569;margin-bottom:10px">👤 ${m.user_email||"Anonymous"}</p> ${m.status==="answered"&&m.reply?`<div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:8px;padding:10px;font-size:13px;color:#6ee7b7;margin-bottom:8px">✅ Your reply: “${m.reply}”</div>`:""} ${m.status==="pending"?`<div style="display:flex;gap:8px;margin-top:8px">
+<textarea id="rep-${m.id}" class="ta" style="min-height:55px;margin:0" placeholder="Type your reply here — student sees it instantly..."></textarea>
+<div style="display:flex;flex-direction:column;gap:6px">
+<button class="btn btn-p" onclick="aiReply('${m.id}')">Send ↗</button>
+<button class="btn btn-r" onclick="aiDismiss('${m.id}')">Dismiss</button>
+</div>
+</div>`:`<button class="btn btn-s" style="font-size:12px;padding:5px 10px" onclick="aiReopen('${m.id}')">↩ Reopen</button>`} </div></div>`).join(””);
+}).catch(()=>{
+document.getElementById(“ai-list”).innerHTML=`<div class="card"><div class="card-body"> <p style="color:#fcd34d;margin-bottom:12px">⚠️ Run this SQL in Supabase to enable AI Inbox:</p> <pre style="background:#0f0f1a;padding:12px;border-radius:8px;font-size:12px;overflow:auto;color:#94a3b8">CREATE TABLE IF NOT EXISTS public.ai_inbox ( id uuid DEFAULT gen_random_uuid() PRIMARY KEY, question text NOT NULL, user_id uuid, user_email text, status text DEFAULT 'pending', reply text, replied_at timestamptz, created_at timestamptz DEFAULT now() ); GRANT ALL ON public.ai_inbox TO anon;</pre> </div></div>`;
+});
+}
+function aiReply(id){var r=(document.getElementById(“rep-”+id)||{}).value||””;if(!r.trim()){toast(“Type a reply”,“error”);return;}PATCH(“ai_inbox”,id,{reply:r.trim(),status:“answered”,replied_at:new Date().toISOString()}).then(()=>{toast(“Sent ✅”,“success”);loadAI();});}
+function aiDismiss(id){PATCH(“ai_inbox”,id,{status:“answered”,reply:”[Dismissed]”}).then(()=>{toast(“Dismissed”,“success”);loadAI();});}
+function aiReopen(id){PATCH(“ai_inbox”,id,{status:“pending”,reply:null}).then(()=>{toast(“Reopened”,“success”);loadAI();});}
+
+// SCHOLARSHIPS
+function loadSchols(){
+GET(“scholarships”,“order=created_at.desc&select=*”).then(d=>{
+var el=document.getElementById(“schol-list”);if(!el)return;
+if(!d||!d.length){el.innerHTML=”<p style='color:#475569;padding:20px'>No scholarships yet. Add one!</p>”;return;}
+el.innerHTML=d.map(s=>`<div class="card"><div class="card-head"> <div><h3>${s.title}</h3><span style="font-size:12px;color:#94a3b8">${s.provider||""} ${s.deadline?"· Deadline: "+s.deadline:""}</span></div> <div style="display:flex;gap:6px"> <span class="bg ${s.active?"bg-g":"bg-r"}">${s.active?"Active":"Hidden"}</span> <button class="btn btn-s" style="padding:5px 10px;font-size:12px" onclick='scholModal(${JSON.stringify(s).replace(/"/g,"&quot;")})'>Edit</button> <button class="btn btn-r" style="padding:5px 10px;font-size:12px" onclick="scholDel('${s.id}')">Del</button> </div> </div><div class="card-body" style="font-size:13px;color:#94a3b8">${s.description||""}</div></div>`).join(””);
+}).catch(()=>{});
+}
+function scholModal(s){
+openModal(`<h3>${s?"Edit":"Add"} Scholarship</h3> <label class="lbl">Title</label><input class="inp" id="sc-t" value="${s?s.title:""}" placeholder="GETFund Scholarship"/> <label class="lbl">Provider</label><input class="inp" id="sc-p" value="${s?s.provider||"":""}" placeholder="GETFund"/> <div class="g2"> <div><label class="lbl">Amount</label><input class="inp" id="sc-a" value="${s?s.amount||"":""}" placeholder="Full tuition"/></div> <div><label class="lbl">Deadline</label><input class="inp" id="sc-d" type="date" value="${s?s.deadline||"":""}"/></div> </div> <label class="lbl">Description</label><textarea class="ta" id="sc-desc">${s?s.description||"":""}</textarea> <label class="lbl">Apply Link</label><input class="inp" id="sc-l" value="${s?s.link||"":""}" placeholder="https://..."/> <div style="display:flex;gap:8px"><button class="btn btn-p" onclick="scholSave('${s?s.id:""}')">💾 Save</button><button class="btn btn-s" onclick="closeModal()">Cancel</button></div>`);
+}
+function scholSave(id){
+var t=document.getElementById(“sc-t”).value.trim();if(!t){toast(“Title required”,“error”);return;}
+var b={title:t,provider:document.getElementById(“sc-p”).value.trim(),amount:document.getElementById(“sc-a”).value.trim(),deadline:document.getElementById(“sc-d”).value||null,description:document.getElementById(“sc-desc”).value.trim(),link:document.getElementById(“sc-l”).value.trim(),active:true};
+(id?PATCH(“scholarships”,id,b):POST(“scholarships”,b)).then(()=>{toast(“Saved ✅”,“success”);closeModal();loadSchols();}).catch(()=>toast(“Error”,“error”));
+}
+function scholDel(id){if(!confirm(“Delete?”))return;DEL(“scholarships”,id).then(()=>{toast(“Deleted”,“success”);loadSchols();});}
+
+// NEWS
+function loadNews(){
+GET(“news”,“order=created_at.desc&select=*”).then(d=>{
+var el=document.getElementById(“news-list”);if(!el)return;
+if(!d||!d.length){el.innerHTML=”<p style='color:#475569;padding:20px'>No news yet.</p>”;return;}
+el.innerHTML=d.map(n=>`<div class="card"><div class="card-head"> <div><h3>${n.title}</h3><span style="font-size:12px;color:#94a3b8">${n.category||"General"} · ${new Date(n.created_at).toLocaleDateString()}</span></div> <div style="display:flex;gap:6px"> ${n.pinned?`<span class="bg bg-o">📌 Pinned</span>`:""} <span class="bg ${n.active?"bg-g":"bg-r"}">${n.active?"Live":"Draft"}</span> <button class="btn btn-s" style="padding:5px 10px;font-size:12px" onclick='newsModal(${JSON.stringify(n).replace(/"/g,"&quot;")})'>Edit</button> <button class="btn btn-r" style="padding:5px 10px;font-size:12px" onclick="newsDel('${n.id}')">Del</button> </div> </div><div class="card-body" style="font-size:13px;color:#94a3b8">${n.summary||""}</div></div>`).join(””);
+}).catch(()=>{});
+}
+function newsModal(n){
+openModal(`<h3>${n?"Edit":"Add"} News</h3> <label class="lbl">Title</label><input class="inp" id="nt" value="${n?n.title:""}" placeholder="News title"/> <div class="g2"> <div><label class="lbl">Category</label><select class="sel" id="nc">${["General","Admissions","Results","Scholarships","Events","Announcements"].map(c=>`<option ${n&&n.category===c?“selected”:””}>${c}</option>`).join("")}</select></div> <div><label class="lbl">Image URL</label><input class="inp" id="ni" value="${n?n.image_url||"":""}" placeholder="https://..."/></div> </div> <label class="lbl">Summary</label><input class="inp" id="ns" value="${n?n.summary||"":""}" placeholder="Short description"/> <label class="lbl">Full Content</label><textarea class="ta" id="nco">${n?n.content||"":""}</textarea> <label class="lbl">Source Link</label><input class="inp" id="nl" value="${n?n.link||"":""}" placeholder="https://..."/> <div class="row" style="padding:8px 0"> <div><h4>Pin to top</h4></div> <button class="tog ${n&&n.pinned?"on":""}" id="n-pin" onclick="this.classList.toggle('on');this.querySelector('.tog-d').style.left=this.classList.contains('on')?'23px':'3px'"><div class="tog-d" style="left:${n&&n.pinned?"23px":"3px"}"></div></button> </div> <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-p" onclick="newsSave('${n?n.id:""}')">💾 ${n?"Update":"Publish"}</button><button class="btn btn-s" onclick="closeModal()">Cancel</button></div>`);
+}
+function newsSave(id){
+var t=document.getElementById(“nt”).value.trim();if(!t){toast(“Title required”,“error”);return;}
+var b={title:t,category:document.getElementById(“nc”).value,summary:document.getElementById(“ns”).value.trim(),content:document.getElementById(“nco”).value.trim(),link:document.getElementById(“nl”).value.trim(),image_url:document.getElementById(“ni”).value.trim(),pinned:document.getElementById(“n-pin”).classList.contains(“on”),active:true};
+(id?PATCH(“news”,id,b):POST(“news”,b)).then(()=>{toast(“Saved ✅”,“success”);closeModal();loadNews();}).catch(()=>toast(“Error”,“error”));
+}
+function newsDel(id){if(!confirm(“Delete?”))return;DEL(“news”,id).then(()=>{toast(“Deleted”,“success”);loadNews();});}
+
+// FORMS
+function loadForms(){
+Promise.all([GET(“admission_forms”,“order=created_at.desc&select=*”),GET(“universities”,“select=id,name”)]).then(([forms,unis])=>{
+var el=document.getElementById(“forms-list”);if(!el)return;
+var umap={};(unis||[]).forEach(u=>umap[u.id]=u.name);
+if(!forms||!forms.length){el.innerHTML=”<p style='color:#475569;padding:20px'>No forms yet.</p>”;return;}
+el.innerHTML=`<div class="card"><table><thead><tr><th>University</th><th>Title</th><th>Price</th><th>Deadline</th><th>Status</th><th>Actions</th></tr></thead><tbody> ${forms.map(f=>`<tr>
+<td style="color:#94a3b8;font-size:12px">${umap[f.university_id]||”—”}</td>
+<td style="color:#f1f5f9">${f.title}</td><td>GHC ${f.price||0}</td>
+<td style="font-size:12px">${f.deadline||”—”}</td>
+<td><span class=“bg ${f.open?“bg-g”:“bg-r”}”>${f.open?“Open”:“Closed”}</span></td>
+<td><div style="display:flex;gap:4px">
+<button class="btn btn-s" style="padding:5px 10px;font-size:12px" onclick='formModal(${JSON.stringify(f).replace(/"/g,"&quot;")})'>Edit</button>
+<button class=“btn ${f.open?“btn-r”:“btn-g”}” style=“padding:5px 10px;font-size:12px” onclick=“formToggle(’${f.id}’,${!f.open})”>${f.open?“Close”:“Open”}</button>
+<button class="btn btn-r" style="padding:5px 10px;font-size:12px" onclick="formDel('${f.id}')">Del</button>
+</div></td>
+</tr>`).join("")}</tbody></table></div>`;
+}).catch(()=>{});
+}
+function formModal(f){
+GET(“universities”,“select=id,name&order=name.asc”).then(unis=>{
+openModal(`<h3>${f?"Edit":"Add"} Form</h3> <label class="lbl">University</label><select class="sel" id="afu">${(unis||[]).map(u=>`<option value=”${u.id}” ${f&&f.university_id===u.id?“selected”:””}>${u.name}</option>`).join("")}</select> <label class="lbl">Title</label><input class="inp" id="aft" value="${f?f.title:""}" placeholder="2025/2026 Admission Form"/> <div class="g2"> <div><label class="lbl">Price (GHC)</label><input class="inp" id="afp" type="number" value="${f?f.price||"":""}" placeholder="150"/></div> <div><label class="lbl">Deadline</label><input class="inp" id="afd" type="date" value="${f?f.deadline||"":""}"/></div> </div> <label class="lbl">Form Link</label><input class="inp" id="afl" value="${f?f.link||"":""}" placeholder="https://..."/> <label class="lbl">Notes</label><textarea class="ta" id="afn">${f?f.notes||"":""}</textarea> <div style="display:flex;gap:8px"><button class="btn btn-p" onclick="formSave('${f?f.id:""}')">💾 Save</button><button class="btn btn-s" onclick="closeModal()">Cancel</button></div>`);
+});
+}
+function formSave(id){
+var b={university_id:document.getElementById(“afu”).value,title:document.getElementById(“aft”).value.trim(),price:parseFloat(document.getElementById(“afp”).value)||0,deadline:document.getElementById(“afd”).value||null,link:document.getElementById(“afl”).value.trim(),notes:document.getElementById(“afn”).value.trim(),open:true};
+(id?PATCH(“admission_forms”,id,b):POST(“admission_forms”,b)).then(()=>{toast(“Saved ✅”,“success”);closeModal();loadForms();}).catch(()=>toast(“Error”,“error”));
+}
+function formToggle(id,v){PATCH(“admission_forms”,id,{open:v}).then(()=>{toast(v?“Opened”:“Closed”,“success”);loadForms();});}
+function formDel(id){if(!confirm(“Delete?”))return;DEL(“admission_forms”,id).then(()=>{toast(“Deleted”,“success”);loadForms();});}
+
+// ANNOUNCEMENTS
+function loadAnns(){
+GET(“announcements”,“order=created_at.desc&select=*”).then(d=>{
+var el=document.getElementById(“ann-list”);if(!el)return;
+if(!d||!d.length){el.innerHTML=”<p style='color:#475569;padding:20px'>No announcements yet.</p>”;return;}
+el.innerHTML=d.map(a=>`<div class="card"><div class="card-head"> <div style="display:flex;align-items:center;gap:8px"> <span style="width:12px;height:12px;border-radius:50%;background:${a.color||"#7C3AED"};display:inline-block"></span> <span style="color:#f1f5f9;font-weight:600">${a.text}</span> </div> <div style="display:flex;gap:6px"> <span class="bg ${a.active?"bg-g":"bg-r"}">${a.active?"Live":"Hidden"}</span> <button class="btn btn-s" style="padding:5px 10px;font-size:12px" onclick='annModal(${JSON.stringify(a).replace(/"/g,"&quot;")})'>Edit</button> <button class="btn ${a.active?"btn-o":"btn-g"}" style="padding:5px 10px;font-size:12px" onclick="annToggle('${a.id}',${!a.active})">${a.active?"Hide":"Show"}</button> <button class="btn btn-r" style="padding:5px 10px;font-size:12px" onclick="annDel('${a.id}')">Del</button> </div> </div></div>`).join(””);
+}).catch(()=>{});
+}
+function annModal(a){
+var color = a && a.color ? a.color : ‘#7C3AED’;
+var text = a && a.text ? a.text.replace(/”/g,’"’) : ‘’;
+var link = a && a.link ? a.link : ‘’;
+var id = a && a.id ? a.id : ‘’;
+var html = ‘<h3>’+(a?‘Edit’:‘New’)+’ Announcement</h3>’
++’<label class="lbl">Text</label><input class="inp" id="an-t" value="'+text+'" placeholder="🎉 UniPredict is now live!"/>’
++’<div class="g2">’
++’<div><label class="lbl">Color</label><input type="color" class="inp" id="an-c" value="'+color+'" style="height:40px;cursor:pointer;padding:4px"/></div>’
++’<div><label class="lbl">Link (optional)</label><input class="inp" id="an-l" value="'+link+'" placeholder="https://..."/></div>’
++’</div>’
++’<div style="display:flex;gap:8px"><button class=“btn btn-p” onclick=“annSave('”+id+”')”>💾 Save</button><button class="btn btn-s" onclick="closeModal()">Cancel</button></div>’;
+openModal(html);
+}
+function annSave(id){
+var t=document.getElementById(“an-t”).value.trim();if(!t){toast(“Text required”,“error”);return;}
+var b={text:t,color:document.getElementById(“an-c”).value,link:document.getElementById(“an-l”).value.trim(),active:true};
+(id?PATCH(“announcements”,id,b):POST(“announcements”,b)).then(()=>{toast(“Saved ✅”,“success”);closeModal();loadAnns();}).catch(()=>toast(“Error”,“error”));
+}
+function annToggle(id,v){PATCH(“announcements”,id,{active:v}).then(()=>{toast(v?“Live ✅”:“Hidden”,“success”);loadAnns();});}
+function annDel(id){if(!confirm(“Delete?”))return;DEL(“announcements”,id).then(()=>{toast(“Deleted”,“success”);loadAnns();});}
+
+// PAYMENTS
+function loadPays(){
+var st=(document.getElementById(“pay-fil”)||{}).value;
+GET(“payments”,(st?“status=eq.”+st:””)+”&order=created_at.desc&select=*”).then(d=>{
+var tb=document.getElementById(“pay-tb”);if(!tb)return;
+var rev=(d||[]).filter(p=>p.status===“success”).reduce((s,p)=>s+(p.amount||0),0);
+var sm=document.getElementById(“pay-sum”);if(sm)sm.textContent=(d||[]).length+” records · GHC “+Math.round(rev/100)+” collected”;
+if(!d||!d.length){tb.innerHTML=”<tr><td colspan='6' style='text-align:center;padding:20px;color:#475569'>No payments</td></tr>”;return;}
+tb.innerHTML=d.map(p=>`<tr> <td style="color:#94a3b8;font-size:12px">${new Date(p.created_at).toLocaleDateString()}</td> <td style="color:#f1f5f9">${p.user_email||p.user_id||"—"}</td> <td style="font-weight:600;color:#f1f5f9">GHC ${((p.amount||0)/100).toFixed(2)}</td> <td style="color:#94a3b8;font-size:12px">${p.reference||"—"}</td> <td><span class="bg ${p.status==="success"?"bg-g":p.status==="pending"?"bg-o":p.status==="refunded"?"bg-b":"bg-r"}">${p.status}</span></td> <td><div style="display:flex;gap:4px"> ${p.status==="pending"?`<button class="btn btn-g" style="padding:5px 10px;font-size:12px" onclick="payApprove('${p.id}')">Approve</button>`:""} ${p.status==="success"?`<button class="btn btn-s" style="padding:5px 10px;font-size:12px" onclick="payRefund('${p.id}')">Refund</button>`:""} </div></td> </tr>`).join(””);
+}).catch(()=>{});
+}
+function payApprove(id){PATCH(“payments”,id,{status:“success”,verified_at:new Date().toISOString()}).then(()=>{toast(“Approved ✅”,“success”);loadPays();});}
+function payRefund(id){if(!confirm(“Refund?”))return;PATCH(“payments”,id,{status:“refunded”}).then(()=>{toast(“Refunded”,“success”);loadPays();});}
+
+// USERS
+var _users=[];
+function loadUsers(){
+Promise.all([GET(“profiles”,“order=created_at.desc&select=*”),GET(“payments”,“status=eq.success&select=user_id,amount”),GET(“checks”,“select=user_id”)]).then(([u,p,c])=>{
+var pm={},cm={};(p||[]).forEach(x=>pm[x.user_id]=(pm[x.user_id]||0)+(x.amount||0));(c||[]).forEach(x=>cm[x.user_id]=(cm[x.user_id]||0)+1);
+_users=(u||[]).map(x=>({…x,_p:pm[x.id]||0,_c:cm[x.id]||0}));
+var ct=document.getElementById(“user-ct”);if(ct)ct.textContent=_users.length+” registered users”;
+userRows(_users);
+}).catch(()=>{GET(“profiles”,“order=created_at.desc&select=*”).then(u=>{_users=(u||[]);userRows(_users);}).catch(()=>{});});
+}
+function userSearch(q){userRows(q?_users.filter(u=>(u.email||u.full_name||””).toLowerCase().includes(q.toLowerCase())):_users);}
+function userRows(data){
+var tb=document.getElementById(“user-tb”);if(!tb)return;
+if(!data.length){tb.innerHTML=”<tr><td colspan='6' style='text-align:center;padding:20px;color:#475569'>No users</td></tr>”;return;}
+tb.innerHTML=data.map(u=>`<tr>
+<td style="color:#f1f5f9;font-weight:500">${u.full_name||u.name||”—”}</td>
+<td style="color:#94a3b8;font-size:12px">${u.email||”—”}</td>
+<td style="color:#94a3b8;font-size:12px">${new Date(u.created_at).toLocaleDateString()}</td>
+<td style=“color:${u._p>0?”#10b981”:”#475569”}”>GHC ${((u._p||0)/100).toFixed(2)}</td>
+<td style="color:#94a3b8">${u._c||0}</td>
+<td><button class="btn btn-s" style="padding:5px 10px;font-size:12px" onclick="userView('${u.id}')">View</button></td>
+
+  </tr>`).join("");
+}
+function userView(id){
+  var u=_users.find(x=>x.id===id);if(!u)return;
+  GET("payments","user_id=eq."+id+"&select=*").then(pays=>{
+    openModal(`<h3>👤 ${u.full_name||u.email||"User"}</h3>
+      <div class="row"><div><h4>Email</h4></div><span style="color:#94a3b8">${u.email||"—"}</span></div>
+      <div class="row"><div><h4>Joined</h4></div><span style="color:#94a3b8">${new Date(u.created_at).toLocaleString()}</span></div>
+      <div class="row"><div><h4>Total Paid</h4></div><span style="color:#10b981">GHC ${((u._p||0)/100).toFixed(2)}</span></div>
+      <div class="row"><div><h4>Checks Done</h4></div><span style="color:#94a3b8">${u._c||0}</span></div>
+      <p style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;margin:14px 0 8px">Payment History</p>
+      ${(pays||[]).length?`<table><thead><tr><th>Date</th><th>Amount</th><th>Status</th></tr></thead><tbody>
+        ${pays.map(p=>`<tr><td>${new Date(p.created_at).toLocaleDateString()}</td><td>GHC ${((p.amount||0)/100).toFixed(2)}</td><td><span class="bg ${p.status==="success"?"bg-g":"bg-o"}">${p.status}</span></td></tr>`).join("")}
+      </tbody></table>`:"<p style='color:#475569;font-size:13px'>No payments yet.</p>"}
+      <button class="btn btn-s" onclick="closeModal()" style="margin-top:14px;width:100%;justify-content:center">Close</button>`);
+  });
+}
+
+// APPEARANCE
+function loadAppear(){
+GET(“settings”,“key=in.("primary_color","accent_color","bg_color","card_color","font_heading","font_body")&select=key,value”).then(d=>{
+(d||[]).forEach(s=>{
+var ci=document.getElementById(“c-”+s.key.replace(”_color”,””).replace(“primary”,“c1”).replace(“accent”,“c2”).replace(“bg”,“c3”).replace(“card”,“c4”));
+if(s.key===“primary_color”){document.getElementById(“c1”).value=s.value;document.getElementById(“c1h”).value=s.value;}
+if(s.key===“accent_color”){document.getElementById(“c2”).value=s.value;document.getElementById(“c2h”).value=s.value;}
+if(s.key===“bg_color”){document.getElementById(“c3”).value=s.value;document.getElementById(“c3h”).value=s.value;}
+if(s.key===“card_color”){document.getElementById(“c4”).value=s.value;document.getElementById(“c4h”).value=s.value;}
+if(s.key===“font_heading”){var e=document.getElementById(“fh”);if(e)e.value=s.value;}
+if(s.key===“font_body”){var e=document.getElementById(“fb”);if(e)e.value=s.value;}
+});updGrad();
+}).catch(()=>{});
+[“c1”,“c2”].forEach(id=>{var el=document.getElementById(id);if(el)el.addEventListener(“input”,function(){document.getElementById(id+“h”).value=this.value;updGrad();});});
+}
+function updGrad(){var p=(document.getElementById(“c1”)||{}).value||”#7C3AED”,a=(document.getElementById(“c2”)||{}).value||”#EC4899”;var gp=document.getElementById(“gp”);if(gp)gp.style.background=“linear-gradient(135deg,”+p+”,”+a+”)”;}
+function saveColors(){
+Promise.all([SSet(“primary_color”,document.getElementById(“c1”).value),SSet(“accent_color”,document.getElementById(“c2”).value),SSet(“bg_color”,document.getElementById(“c3”).value),SSet(“card_color”,document.getElementById(“c4”).value)])
+.then(()=>toast(“Colors saved ✅”,“success”)).catch(()=>toast(“Error”,“error”));
+}
+function saveFonts(){Promise.all([SSet(“font_heading”,document.getElementById(“fh”).value),SSet(“font_body”,document.getElementById(“fb”).value)]).then(()=>toast(“Fonts saved ✅”,“success”));}
+
+// SITE TEXT
+function loadText(){
+var keys=[“hero_title”,“hero_sub”,“hero_desc”,“btn1”,“btn2”,“sitename”,“tagline”,“whatsapp”,“email”,“facebook”,“instagram”,“twitter”,“tiktok”,“price”,“price_desc”,“perks”,“footer_tag”,“copyright”];
+GET(“settings”,“key=in.(”+keys.map(k=>’”’+k+’”’).join(”,”)+”)”+”&select=key,value”).then(d=>{
+(d||[]).forEach(s=>{var e=document.getElementById(“t-”+s.key);if(e)e.value=s.value||””;});
+}).catch(()=>{});
+}
+function saveST(keys){
+Promise.all(keys.map(k=>{var e=document.getElementById(“t-”+k);return e?SSet(k,e.value):Promise.resolve();}))
+.then(()=>toast(“Saved ✅”,“success”)).catch(()=>toast(“Error”,“error”));
+}
+
+// FEATURES
+var FEATS=[
+{k:“maintenance_mode”,l:“🚧 Maintenance Mode”,d:“Hides site from all visitors”},
+{k:“ai_counsellor”,l:“🤖 AI Counsellor”,d:“Chat assistant on student site”},
+{k:“payments_enabled”,l:“💳 Payments”,d:“Allow students to subscribe and pay”},
+{k:“registration_open”,l:“📝 Registration”,d:“Allow new account creation”},
+{k:“show_scholarships”,l:“🎓 Scholarships Page”,d:“Show scholarships section”},
+{k:“show_news”,l:“📰 News Page”,d:“Show news section”},
+{k:“show_rankings”,l:“🏆 Rankings”,d:“Show university rankings”},
+{k:“show_compare”,l:“⚖️ Compare Tool”,d:“Allow comparing universities side by side”},
+{k:“show_calculator”,l:“📐 Calculator”,d:“Show aggregate score calculator”},
+{k:“show_forms”,l:“📝 Admission Forms”,d:“Show admission forms tracker”},
+{k:“announcement_bar”,l:“📢 Announcement Bar”,d:“Banner at top of student site”},
+];
+function loadFeats(){
+GET(“settings”,“key=in.(”+FEATS.map(f=>’”’+f.k+’”’).join(”,”)+”)”+”&select=key,value”).then(d=>{
+var vals={};(d||[]).forEach(s=>vals[s.k]=s.value===“true”);
+var el=document.getElementById(“feat-body”);if(!el)return;
+el.innerHTML=FEATS.map(f=>`<div class="row"> <div><h4>${f.l}</h4><p>${f.d}</p></div> <button class="tog ${vals[f.k]?"on":""}" id="ft-${f.k}" onclick="featToggle('${f.k}',this)"><div class="tog-d" style="left:${vals[f.k]?"23px":"3px"}"></div></button> </div>`).join(””);
+}).catch(()=>{var el=document.getElementById(“feat-body”);if(el)el.innerHTML=”<p style='color:#475569'>Settings table not found in database.</p>”;});
+}
+function featToggle(k,btn){
+var v=!btn.classList.contains(“on”);btn.classList.toggle(“on”);btn.querySelector(”.tog-d”).style.left=v?“23px”:“3px”;
+SSet(k,String(v)).then(()=>toast((v?“Enabled”:“Disabled”)+” ✅”,“success”)).catch(()=>toast(“Error”,“error”));
+}
+
+// PAYSTACK
+function pkLoad(){
+GET(“settings”,“key=in.("pk_test_pub","pk_live_pub","pk_live_mode","subscription_price","subscription_currency")&select=key,value”).then(d=>{
+var v={};(d||[]).forEach(s=>v[s.key]=s.value);
+if(v.pk_test_pub)document.getElementById(“pk-tp”).value=v.pk_test_pub;
+if(v.pk_live_pub)document.getElementById(“pk-lp”).value=v.pk_live_pub;
+if(v.subscription_price)document.getElementById(“sub-p”).value=v.subscription_price;
+if(v.subscription_currency)document.getElementById(“sub-c”).value=v.subscription_currency||“GHS”;
+var live=v.pk_live_mode===“true”;
+var tog=document.getElementById(“pk-tog”),bdg=document.getElementById(“pk-badge”);
+if(tog){tog.classList.toggle(“on”,live);tog.querySelector(”.tog-d”).style.left=live?“23px”:“3px”;}
+if(bdg){bdg.textContent=live?“🟢 Live Mode”:“⚙️ Test Mode”;bdg.style.color=live?”#6ee7b7”:”#fcd34d”;}
+}).catch(()=>{});
+}
+function pkToggle(btn){
+var v=!btn.classList.contains(“on”);btn.classList.toggle(“on”);btn.querySelector(”.tog-d”).style.left=v?“23px”:“3px”;
+var b=document.getElementById(“pk-badge”);if(b){b.textContent=v?“🟢 Live Mode”:“⚙️ Test Mode”;b.style.color=v?”#6ee7b7”:”#fcd34d”;}
+}
+function pkSave(){
+var live=document.getElementById(“pk-tog”).classList.contains(“on”);
+var saves=[SSet(“pk_test_pub”,document.getElementById(“pk-tp”).value.trim()),SSet(“pk_live_pub”,document.getElementById(“pk-lp”).value.trim()),SSet(“pk_live_mode”,String(live))];
+var ts=document.getElementById(“pk-ts”).value.trim(),ls=document.getElementById(“pk-ls”).value.trim();
+if(ts)saves.push(SSet(“pk_test_sec”,ts));if(ls)saves.push(SSet(“pk_live_sec”,ls));
+Promise.all(saves).then(()=>toast(“Keys saved ✅”,“success”)).catch(()=>toast(“Error”,“error”));
+}
+function subSave(){Promise.all([SSet(“subscription_price”,document.getElementById(“sub-p”).value),SSet(“subscription_currency”,document.getElementById(“sub-c”).value)]).then(()=>toast(“Price saved ✅”,“success”));}
+
+// START - load dashboard stats immediately
+loadDash();
+</script>
+
+</body>
+</html>
