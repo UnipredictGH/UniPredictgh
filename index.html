@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UniPredict Ghana — Admin</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#0f0f1a;color:#e2e8f0;min-height:100vh}
+h1{padding:14px 18px;background:#161625;border-bottom:1px solid #ffffff12;font-size:17px;display:flex;align-items:center;justify-content:space-between}
+h1 span{color:#a78bfa}
+h1 a{font-size:12px;color:#7C3AED;text-decoration:none}
+.tabs{display:flex;gap:3px;padding:8px 14px;background:#161625;border-bottom:1px solid #ffffff12;flex-wrap:wrap}
+.tab{padding:7px 11px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;color:#94a3b8;border:none;background:none;font-family:Arial,sans-serif;-webkit-tap-highlight-color:rgba(0,0,0,0);touch-action:manipulation}
+.tab:hover{color:#fff;background:#7c3aed22}
+.tab.on{background:#7C3AED;color:#fff}
+.pg{display:none;padding:18px}
+.pg.on{display:block}
+.btn{padding:7px 13px;border:none;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;margin:2px;font-family:Arial,sans-serif;display:inline-block;-webkit-tap-highlight-color:rgba(0,0,0,0);touch-action:manipulation}
+.bp{background:#7C3AED;color:#fff}
+.bs{background:#7c3aed22;color:#a78bfa;border:1px solid #7c3aed44}
+.br{background:#ef444422;color:#fca5a5;border:1px solid #ef444444}
+.bg{background:#10b98122;color:#6ee7b7;border:1px solid #10b98144}
+.bo{background:#f59e0b22;color:#fcd34d;border:1px solid #f59e0b44}
+.card{background:#161625;border:1px solid #ffffff12;border-radius:10px;margin-bottom:12px;overflow:hidden}
+.ch{padding:12px 16px;border-bottom:1px solid #ffffff12;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.ch h3{font-size:14px;font-weight:700;color:#f1f5f9}
+.cb{padding:16px}
+.fi{width:100%;padding:8px 10px;background:#1e1e32;border:1px solid #ffffff12;border-radius:7px;color:#f1f5f9;font-size:13px;font-family:Arial,sans-serif;outline:none;margin-bottom:9px;display:block}
+.fi:focus{border-color:#7C3AED}
+textarea.fi{resize:vertical;min-height:70px}
+.lbl{font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:3px;display:block;text-transform:uppercase;letter-spacing:.5px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{padding:7px 10px;text-align:left;font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;border-bottom:1px solid #ffffff12}
+td{padding:8px 10px;border-bottom:1px solid #ffffff06;vertical-align:middle}
+.bge{display:inline-flex;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:700}
+.bgp{background:#7c3aed33;color:#a78bfa}
+.bgg{background:#10b98122;color:#6ee7b7}
+.bgr{background:#ef444422;color:#fca5a5}
+.bgo{background:#f59e0b22;color:#fcd34d}
+.bgb{background:#3b82f622;color:#93c5fd}
+.bgy{background:#ffffff12;color:#94a3b8}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.st{background:#161625;border:1px solid #ffffff12;border-radius:10px;padding:14px}
+.sv{font-size:26px;font-weight:900;color:#f1f5f9}
+.sl{font-size:11px;color:#94a3b8;margin-top:3px}
+.ov{position:fixed;inset:0;background:#000000bb;display:none;align-items:center;justify-content:center;z-index:999;padding:14px}
+.ov.on{display:flex}
+.md{background:#161625;border:1px solid #ffffff22;border-radius:12px;padding:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;position:relative}
+.md h3{font-size:15px;font-weight:800;color:#f1f5f9;margin-bottom:14px}
+.cx{position:absolute;top:12px;right:14px;background:none;border:none;color:#475569;font-size:20px;cursor:pointer}
+.ts{position:fixed;bottom:14px;right:14px;z-index:9999;display:flex;flex-direction:column;gap:5px}
+.t{background:#1e1e32;border-left:3px solid #7C3AED;border-radius:6px;padding:9px 13px;font-size:12px;color:#f1f5f9;min-width:180px;box-shadow:0 4px 20px #00000066}
+.row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #ffffff06}
+.row:last-child{border-bottom:none}
+.row h4{font-size:13px;font-weight:600;color:#f1f5f9}
+.row p{font-size:11px;color:#475569;margin-top:1px}
+.tg{width:40px;height:22px;background:#ffffff18;border-radius:99px;cursor:pointer;position:relative;border:none;display:inline-block;vertical-align:middle;flex-shrink:0;-webkit-tap-highlight-color:rgba(0,0,0,0);touch-action:manipulation}
+.tg.on{background:#7C3AED}
+.td{width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:left .15s;pointer-events:none}
+.tg.on .td{left:21px}
+</style>
+</head>
+<body>
+<h1><span>UniPredict Ghana</span> Admin Panel <a href="https://uni-predict.netlify.app" target="_blank">View Student Site ↗</a></h1>
+<div class="tabs">
+  <button class="tab on" data-tab="dash">📊 Dashboard</button>
+  <button class="tab" data-tab="unis">🏛️ Universities</button>
+  <button class="tab" data-tab="progs">📚 Programmes</button>
+  <button class="tab" data-tab="ai">🤖 AI Inbox</button>
+  <button class="tab" data-tab="schols">🎓 Scholarships</button>
+  <button class="tab" data-tab="news">📰 News</button>
+  <button class="tab" data-tab="forms">📝 Forms</button>
+  <button class="tab" data-tab="anns">📢 Announcements</button>
+  <button class="tab" data-tab="pays">💳 Payments</button>
+  <button class="tab" data-tab="users">👥 Users</button>
+  <button class="tab" data-tab="appear">🎨 Appearance</button>
+  <button class="tab" data-tab="stext">✏️ Site Text</button>
+  <button class="tab" data-tab="feats">🔧 Toggles</button>
+  <button class="tab" data-tab="pstack">🔑 Paystack</button>
+</div>
+
+<!-- DASHBOARD -->
+
+<div id="err-bar" style="display:none;background:#ef4444;color:#fff;padding:10px 16px;font-size:13px;font-weight:600;position:fixed;top:0;left:0;right:0;z-index:9999"></div>
+<div id="dash" class="pg on">
+  <div class="stats">
+    <div class="st"><div class="sv" id="d1">—</div><div class="sl">🏛️ Universities</div></div>
+    <div class="st"><div class="sv" id="d2">—</div><div class="sl">📚 Programmes</div></div>
+    <div class="st"><div class="sv" id="d3">—</div><div class="sl">👥 Users</div></div>
+    <div class="st"><div class="sv" id="d4">—</div><div class="sl">💰 Revenue GHC</div></div>
+    <div class="st"><div class="sv" id="d5">—</div><div class="sl">⏳ Pending Pays</div></div>
+    <div class="st"><div class="sv" id="d6">—</div><div class="sl">🤖 AI Questions</div></div>
+  </div>
+  <div class="card"><div class="ch"><h3>Quick Actions</h3></div><div class="cb" style="display:flex;gap:5px;flex-wrap:wrap">
+    <button class="btn bp" onclick="go('unis')">🏛️ Universities</button>
+    <button class="btn bs" onclick="go('progs')">📚 Programmes</button>
+    <button class="btn bs" onclick="go('ai')">🤖 AI Inbox</button>
+    <button class="btn bs" onclick="go('pays')">💳 Payments</button>
+    <button class="btn bs" onclick="go('appear')">🎨 Appearance</button>
+    <button class="btn bs" onclick="go('pstack')">🔑 Paystack</button>
+    <button class="btn bs" onclick="go('feats')">🔧 Toggles</button>
+    <button class="btn bs" onclick="go('stext')">✏️ Edit Text</button>
+  </div></div>
+</div>
+
+<!-- UNIVERSITIES -->
+
+<div id="unis" class="pg">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <h2 style="font-size:16px;font-weight:800;color:#f1f5f9">Universities</h2>
+    <button class="btn bp" onclick="uniModal(null)">+ Add University</button>
+  </div>
+  <input type="text" class="fi" id="uni-s" placeholder="Search universities..." oninput="uniSearch(this.value)" style="max-width:300px"/>
+  <div class="card"><table><thead><tr><th>Code</th><th>Name</th><th>Type</th><th>Region</th><th>Status</th><th>Progs</th><th>Actions</th></tr></thead>
+  <tbody id="uni-tb"><tr><td colspan="7" style="text-align:center;padding:24px;color:#475569">Loading...</td></tr></tbody></table></div>
+</div>
+
+<!-- PROGRAMMES -->
+
+<div id="progs" class="pg">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <h2 style="font-size:16px;font-weight:800;color:#f1f5f9">Programmes</h2>
+    <button class="btn bp" onclick="progModal(null)">+ Add Programme</button>
+  </div>
+  <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+    <input type="text" class="fi" id="prog-s" placeholder="Search..." oninput="progFilter()" style="flex:1;min-width:150px;margin:0"/>
+    <select class="fi" id="prog-uf" onchange="progFilter()" style="width:160px;margin:0"><option value="">All Universities</option></select>
+    <select class="fi" id="prog-df" onchange="progFilter()" style="width:110px;margin:0">
+      <option value="">All Degrees</option>
+      <option>BSc</option><option>BA</option><option>BEd</option><option>BTech</option>
+      <option>BBA</option><option>LLB</option><option>MBChB</option><option>HND</option>
+      <option>Diploma</option><option>Certificate</option>
+    </select>
+  </div>
+  <p id="prog-ct" style="font-size:12px;color:#475569;margin-bottom:8px"></p>
+  <div class="card"><table><thead><tr><th>Uni</th><th>Programme</th><th>Degree</th><th>Cutoff</th><th>Fee</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody id="prog-tb"><tr><td colspan="7" style="text-align:center;padding:24px;color:#475569">Loading...</td></tr></tbody></table>
+  <div id="prog-pag" style="padding:8px 12px;border-top:1px solid #ffffff12"></div></div>
+</div>
+
+<!-- AI INBOX -->
+
+<div id="ai" class="pg">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div>
+      <h2 style="font-size:16px;font-weight:800;color:#f1f5f9">AI Counsellor Inbox</h2>
+      <p style="font-size:12px;color:#475569;margin-top:3px">Questions the AI could not answer — reply here, student sees it instantly</p>
+    </div>
+    <div style="display:flex;gap:6px">
+      <select class="fi" id="ai-f" onchange="loadAI()" style="width:120px;margin:0">
+        <option value="pending">Unanswered</option>
+        <option value="answered">Answered</option>
+        <option value="">All</option>
+      </select>
+      <button class="btn bs" onclick="loadAI()">🔄 Refresh</button>
+    </div>
+  </div>
+  <div id="ai-list"><p style="color:#475569">Loading...</p></div>
+</div>
+
+<!-- SCHOLARSHIPS -->
+
+<div id="schols" class="pg">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <h2 style="font-size:16px;font-weight:800;color:#f1f5f9">Scholarships</h2>
+    <button class="btn bp" onclick="scholModal(null)">+ Add</button>
+  </div>
+  <div id="schol-list"><p style="color:#475569">Loading...</p></div>
+</div>
+
+<!-- NEWS -->
+
+<div id="news" class="pg">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <h2 style="font-size:16px;font-weight:800;color:#f1f5f9">News and Updates</h2>
+    <button class="btn bp" onclick="newsModal(null)">+ Add News</button>
+  </div>
+  <div id="news-list"><p style="color:#475569">Loading...</p></div>
+</div>
+
+<!-- FORMS -->
+
+<div id="forms" class="pg">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <h2 style="font-size:16px;font-weight:800;color:#f1f5f9">Admission Forms</h2>
+    <button class="btn bp" onclick="formModal(null)">+ Add Form</button>
+  </div>
+  <div id="forms-list"><p style="color:#475569">Loading...</p></div>
+</div>
+
+<!-- ANNOUNCEMENTS -->
+
+<div id="anns" class="pg">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <h2 style="font-size:16px;font-weight:800;color:#f1f5f9">Announcements</h2>
+    <button class="btn bp" onclick="annModal(null)">+ Add</button>
+  </div>
+  <div id="ann-list"><p style="color:#475569">Loading...</p></div>
+</div>
+
+<!-- PAYMENTS -->
+
+<div id="pays" class="pg">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div>
+      <h2 style="font-size:16px;font-weight:800;color:#f1f5f9">Payments</h2>
+      <p id="pay-sum" style="font-size:12px;color:#475569;margin-top:3px">Loading...</p>
+    </div>
+    <select class="fi" id="pay-f" onchange="loadPays()" style="width:120px;margin:0">
+      <option value="">All</option>
+      <option value="success">Successful</option>
+      <option value="pending">Pending</option>
+      <option value="failed">Failed</option>
+      <option value="refunded">Refunded</option>
+    </select>
+  </div>
+  <div class="card"><table><thead><tr><th>Date</th><th>User</th><th>Amount</th><th>Ref</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody id="pay-tb"><tr><td colspan="6" style="text-align:center;padding:24px;color:#475569">Loading...</td></tr></tbody></table></div>
+</div>
+
+<!-- USERS -->
+
+<div id="users" class="pg">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div>
+      <h2 style="font-size:16px;font-weight:800;color:#f1f5f9">Users</h2>
+      <p id="user-ct" style="font-size:12px;color:#475569;margin-top:3px">Loading...</p>
+    </div>
+    <input type="text" class="fi" id="user-s" placeholder="Search users..." oninput="userSearch(this.value)" style="width:200px;margin:0"/>
+  </div>
+  <div class="card"><table><thead><tr><th>Name</th><th>Email</th><th>Joined</th><th>Paid</th><th>Checks</th><th></th></tr></thead>
+  <tbody id="user-tb"><tr><td colspan="6" style="text-align:center;padding:24px;color:#475569">Loading...</td></tr></tbody></table></div>
+</div>
+
+<!-- APPEARANCE -->
+
+<div id="appear" class="pg">
+  <h2 style="font-size:16px;font-weight:800;color:#f1f5f9;margin-bottom:14px">Appearance</h2>
+  <div class="card"><div class="ch"><h3>Colors</h3></div><div class="cb">
+    <div class="g2">
+      <div>
+        <label class="lbl">Primary Color</label>
+        <div style="display:flex;gap:8px;margin-bottom:9px">
+          <input type="color" id="c1" value="#7C3AED" oninput="document.getElementById('c1t').value=this.value;updG()" style="width:40px;height:36px;border:1px solid #ffffff18;border-radius:7px;cursor:pointer;padding:2px;background:none"/>
+          <input type="text" class="fi" id="c1t" value="#7C3AED" oninput="document.getElementById('c1').value=this.value;updG()" style="margin:0;flex:1"/>
+        </div>
+      </div>
+      <div>
+        <label class="lbl">Accent Color</label>
+        <div style="display:flex;gap:8px;margin-bottom:9px">
+          <input type="color" id="c2" value="#EC4899" oninput="document.getElementById('c2t').value=this.value;updG()" style="width:40px;height:36px;border:1px solid #ffffff18;border-radius:7px;cursor:pointer;padding:2px;background:none"/>
+          <input type="text" class="fi" id="c2t" value="#EC4899" oninput="document.getElementById('c2').value=this.value;updG()" style="margin:0;flex:1"/>
+        </div>
+      </div>
+      <div>
+        <label class="lbl">Background Color</label>
+        <div style="display:flex;gap:8px;margin-bottom:9px">
+          <input type="color" id="c3" value="#0f0f1a" oninput="document.getElementById('c3t').value=this.value" style="width:40px;height:36px;border:1px solid #ffffff18;border-radius:7px;cursor:pointer;padding:2px;background:none"/>
+          <input type="text" class="fi" id="c3t" value="#0f0f1a" oninput="document.getElementById('c3').value=this.value" style="margin:0;flex:1"/>
+        </div>
+      </div>
+      <div>
+        <label class="lbl">Card Color</label>
+        <div style="display:flex;gap:8px;margin-bottom:9px">
+          <input type="color" id="c4" value="#161625" oninput="document.getElementById('c4t').value=this.value" style="width:40px;height:36px;border:1px solid #ffffff18;border-radius:7px;cursor:pointer;padding:2px;background:none"/>
+          <input type="text" class="fi" id="c4t" value="#161625" oninput="document.getElementById('c4').value=this.value" style="margin:0;flex:1"/>
+        </div>
+      </div>
+    </div>
+    <div id="gp" style="height:34px;border-radius:8px;background:linear-gradient(135deg,#7C3AED,#EC4899);margin-bottom:12px"></div>
+    <button class="btn bp" onclick="saveColors()">Save Colors</button>
+  </div></div>
+  <div class="card"><div class="ch"><h3>Fonts</h3></div><div class="cb">
+    <div class="g2">
+      <div><label class="lbl">Heading Font</label><select class="fi" id="fh" style="margin:0"><option>Outfit</option><option>Inter</option><option>Poppins</option><option>Space Grotesk</option></select></div>
+      <div><label class="lbl">Body Font</label><select class="fi" id="fb" style="margin:0"><option>Inter</option><option>Outfit</option><option>Poppins</option><option>DM Sans</option></select></div>
+    </div>
+    <button class="btn bp" onclick="saveFonts()" style="margin-top:10px">Save Fonts</button>
+  </div></div>
+</div>
+
+<!-- SITE TEXT -->
+
+<div id="stext" class="pg">
+  <h2 style="font-size:16px;font-weight:800;color:#f1f5f9;margin-bottom:14px">Edit Site Text</h2>
+
+  <div class="card"><div class="ch"><h3>Hero Section</h3></div><div class="cb">
+    <label class="lbl">Main Title</label>
+    <input type="text" class="fi" id="st-hero_title" placeholder="PREDICT. MATCH. ACHIEVE."/>
+    <label class="lbl">Subtitle</label>
+    <input type="text" class="fi" id="st-hero_sub" placeholder="Ghana's #1 University Eligibility Checker"/>
+    <label class="lbl">Description</label>
+    <textarea class="fi" id="st-hero_desc" placeholder="Find out which universities you qualify for..."></textarea>
+    <div class="g2">
+      <div><label class="lbl">Primary Button</label><input type="text" class="fi" id="st-btn1" placeholder="Check My Eligibility" style="margin:0"/></div>
+      <div><label class="lbl">Secondary Button</label><input type="text" class="fi" id="st-btn2" placeholder="Browse Universities" style="margin:0"/></div>
+    </div>
+    <button class="btn bp" onclick="saveST('hero_title,hero_sub,hero_desc,btn1,btn2')" style="margin-top:10px">Save Hero</button>
+  </div></div>
+
+  <div class="card"><div class="ch"><h3>Contact and Branding</h3></div><div class="cb">
+    <div class="g2">
+      <div><label class="lbl">Site Name</label><input type="text" class="fi" id="st-sitename" placeholder="UniPredict Ghana" style="margin:0"/></div>
+      <div><label class="lbl">Tagline</label><input type="text" class="fi" id="st-tagline" placeholder="PREDICT. MATCH. ACHIEVE." style="margin:0"/></div>
+      <div><label class="lbl">WhatsApp Number</label><input type="text" class="fi" id="st-whatsapp" placeholder="0537889150" style="margin:0"/></div>
+      <div><label class="lbl">Email</label><input type="text" class="fi" id="st-email" placeholder="UniPredictghana@gmail.com" style="margin:0"/></div>
+      <div><label class="lbl">Facebook URL</label><input type="text" class="fi" id="st-facebook" placeholder="https://..." style="margin:0"/></div>
+      <div><label class="lbl">Instagram URL</label><input type="text" class="fi" id="st-instagram" placeholder="https://..." style="margin:0"/></div>
+      <div><label class="lbl">Twitter URL</label><input type="text" class="fi" id="st-twitter" placeholder="https://..." style="margin:0"/></div>
+      <div><label class="lbl">TikTok URL</label><input type="text" class="fi" id="st-tiktok" placeholder="https://..." style="margin:0"/></div>
+    </div>
+    <button class="btn bp" onclick="saveST('sitename,tagline,whatsapp,email,facebook,instagram,twitter,tiktok')" style="margin-top:10px">Save Contact</button>
+  </div></div>
+
+  <div class="card"><div class="ch"><h3>Basic Plan — GHC 12</h3></div><div class="cb">
+    <div class="g2">
+      <div><label class="lbl">Plan Name</label><input type="text" class="fi" id="st-basic_name" placeholder="Basic" style="margin:0"/></div>
+      <div><label class="lbl">Price (GHC)</label><input type="number" class="fi" id="st-basic_price" placeholder="12" style="margin:0"/></div>
+    </div>
+    <label class="lbl" style="margin-top:9px">Description</label>
+    <input type="text" class="fi" id="st-basic_desc" placeholder="Get started with essential tools"/>
+    <label class="lbl">What You Get (one per line)</label>
+    <textarea class="fi" id="st-basic_perks" placeholder="Eligibility Checker (3 checks)&#10;Aggregate Calculator&#10;Browse Universities"></textarea>
+    <button class="btn bp" onclick="saveST('basic_name,basic_price,basic_desc,basic_perks')">Save Basic Plan</button>
+  </div></div>
+
+  <div class="card"><div class="ch"><h3>Premium Plan — GHC 16</h3></div><div class="cb">
+    <div class="g2">
+      <div><label class="lbl">Plan Name</label><input type="text" class="fi" id="st-premium_name" placeholder="Premium" style="margin:0"/></div>
+      <div><label class="lbl">Price (GHC)</label><input type="number" class="fi" id="st-premium_price" placeholder="16" style="margin:0"/></div>
+    </div>
+    <label class="lbl" style="margin-top:9px">Description</label>
+    <input type="text" class="fi" id="st-premium_desc" placeholder="Everything you need"/>
+    <label class="lbl">What You Get (one per line)</label>
+    <textarea class="fi" id="st-premium_perks" placeholder="Unlimited Eligibility Checks&#10;AI Counsellor&#10;Scholarships Access&#10;Admission Forms&#10;News and Updates"></textarea>
+    <label class="lbl">Badge Label</label>
+    <input type="text" class="fi" id="st-premium_badge" placeholder="Most Popular"/>
+    <button class="btn bp" onclick="saveST('premium_name,premium_price,premium_desc,premium_perks,premium_badge')">Save Premium Plan</button>
+  </div></div>
+
+  <div class="card"><div class="ch"><h3>Bundle Plan — GHC 28</h3></div><div class="cb">
+    <div class="g2">
+      <div><label class="lbl">Plan Name</label><input type="text" class="fi" id="st-bundle_name" placeholder="Bundle" style="margin:0"/></div>
+      <div><label class="lbl">Price (GHC)</label><input type="number" class="fi" id="st-bundle_price" placeholder="28" style="margin:0"/></div>
+    </div>
+    <label class="lbl" style="margin-top:9px">Description</label>
+    <input type="text" class="fi" id="st-bundle_desc" placeholder="Complete package"/>
+    <label class="lbl">What You Get (one per line)</label>
+    <textarea class="fi" id="st-bundle_perks" placeholder="Everything in Premium&#10;Priority WhatsApp Support&#10;Early Access to New Features&#10;Valid for 1 Full Year"></textarea>
+    <label class="lbl">Badge Label</label>
+    <input type="text" class="fi" id="st-bundle_badge" placeholder="Best Value"/>
+    <button class="btn bp" onclick="saveST('bundle_name,bundle_price,bundle_desc,bundle_perks,bundle_badge')">Save Bundle Plan</button>
+  </div></div>
+
+  <div class="card"><div class="ch"><h3>Footer</h3></div><div class="cb">
+    <label class="lbl">Footer Tagline</label>
+    <input type="text" class="fi" id="st-footer_tag" placeholder="Empowering Ghanaian Students"/>
+    <label class="lbl">Copyright Text</label>
+    <input type="text" class="fi" id="st-copyright" placeholder="2025 UniPredict Ghana. All rights reserved."/>
+    <button class="btn bp" onclick="saveST('footer_tag,copyright')">Save Footer</button>
+  </div></div>
+</div>
+
+<!-- FEATURES -->
+
+<div id="feats" class="pg">
+  <h2 style="font-size:16px;font-weight:800;color:#f1f5f9;margin-bottom:14px">Features and Toggles</h2>
+  <div class="card"><div class="cb" id="feat-body"><p style="color:#475569">Loading...</p></div></div>
+</div>
+
+<!-- PAYSTACK -->
+
+<div id="pstack" class="pg">
+  <h2 style="font-size:16px;font-weight:800;color:#f1f5f9;margin-bottom:14px">Paystack Keys</h2>
+  <div class="card"><div class="ch"><h3>Keys</h3><span id="pk-b" style="font-size:12px;font-weight:700;color:#fcd34d">Test Mode</span></div><div class="cb">
+    <div style="background:#f59e0b18;border:1px solid #f59e0b33;border-radius:8px;padding:10px;margin-bottom:12px;font-size:12px;color:#fcd34d">Only the Public Key is used on the student site. Keep secret keys private.</div>
+    <p style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;margin-bottom:8px">Test Keys</p>
+    <label class="lbl">Test Public Key</label><input type="text" class="fi" id="pk1" placeholder="pk_test_..."/>
+    <label class="lbl">Test Secret Key</label><input type="password" class="fi" id="pk2" placeholder="sk_test_..."/>
+    <p style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;margin:10px 0 8px">Live Keys</p>
+    <label class="lbl">Live Public Key</label><input type="text" class="fi" id="pk3" placeholder="pk_live_..."/>
+    <label class="lbl">Live Secret Key</label><input type="password" class="fi" id="pk4" placeholder="sk_live_..."/>
+    <div class="row" style="margin:10px 0">
+      <div><h4>Use Live Keys</h4><p>Switch on when Paystack account is approved</p></div>
+      <button class="tg" id="pk-tog" onclick="pkToggle(this)"><div class="td"></div></button>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button class="btn bp" onclick="pkSave()">Save Keys</button>
+      <button class="btn bs" onclick="pkLoad()">Reload</button>
+    </div>
+  </div></div>
+  <div class="card"><div class="ch"><h3>Subscription Price</h3></div><div class="cb">
+    <div class="g2">
+      <div><label class="lbl">Default Price (GHC)</label><input type="number" class="fi" id="sp1" placeholder="20" style="margin:0"/></div>
+      <div><label class="lbl">Currency</label><select class="fi" id="sp2" style="margin:0"><option value="GHS">GHS</option><option value="USD">USD</option></select></div>
+    </div>
+    <button class="btn bp" onclick="spSave()" style="margin-top:10px">Save Price</button>
+  </div></div>
+</div>
+
+<!-- MODAL -->
+
+<div class="ov" id="ov"><div class="md"><button class="cx" onclick="closeMd()">x</button><div id="md-body"></div></div></div>
+<div class="ts" id="ts"></div>
+
+<script>
+// Global error catcher
+window.onerror = function(msg, src, line) {
+  var e = document.getElementById('err-bar');
+  if (e) { e.style.display='block'; e.textContent = 'JS Error: ' + msg + ' (line ' + line + ')'; }
+  return false;
+};
+
+var SB = 'https://urfqevstrwsrtysbllah.supabase.co';
+var SK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyZnFldnN0cndzcnR5c2JsbGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzNTQ5OTQsImV4cCI6MjEwMDkzMDk5NH0.9TPgghMQdHjqwRm51dEVHJ6O115FPBoYBfZHO_siTYI';
+
+function hd() {
+  return { 'apikey': SK, 'Authorization': 'Bearer ' + SK, 'Content-Type': 'application/json' };
+}
+function GET(t, q) {
+  return fetch(SB + '/rest/v1/' + t + '?' + (q || '') + '&limit=1000', { headers: hd() }).then(function(r) { return r.json(); });
+}
+function POST(t, b) {
+  return fetch(SB + '/rest/v1/' + t, { method: 'POST', headers: Object.assign(hd(), { 'Prefer': 'return=representation' }), body: JSON.stringify(b) }).then(function(r) { return r.json(); });
+}
+function PATCH(t, id, b) {
+  return fetch(SB + '/rest/v1/' + t + '?id=eq.' + id, { method: 'PATCH', headers: Object.assign(hd(), { 'Prefer': 'return=representation' }), body: JSON.stringify(b) }).then(function(r) { return r.json(); });
+}
+function DEL(t, id) {
+  return fetch(SB + '/rest/v1/' + t + '?id=eq.' + id, { method: 'DELETE', headers: hd() });
+}
+function SSet(k, v) {
+  return fetch(SB + '/rest/v1/settings?key=eq.' + k, { method: 'PATCH', headers: Object.assign(hd(), { 'Prefer': 'return=representation' }), body: JSON.stringify({ value: v, updated_at: new Date().toISOString() }) })
+    .then(function(r) { return r.json(); })
+    .then(function(d) { if (!d || !d.length) return POST('settings', { key: k, value: v }); return d; });
+}
+
+function toast(msg, ok) {
+  var e = document.createElement('div');
+  e.className = 't';
+  e.style.borderLeftColor = ok ? '#10b981' : '#ef4444';
+  e.textContent = msg;
+  document.getElementById('ts').appendChild(e);
+  setTimeout(function() { e.remove(); }, 3000);
+}
+function openMd(h) {
+  document.getElementById('md-body').innerHTML = h;
+  document.getElementById('ov').classList.add('on');
+}
+function closeMd() {
+  document.getElementById('ov').classList.remove('on');
+}
+function el(id) { return document.getElementById(id); }
+function val(id) { var e = el(id); return e ? e.value : ''; }
+
+var PAGE_IDS = ['dash','unis','progs','ai','schols','news','forms','anns','pays','users','appear','stext','feats','pstack'];
+var PAGE_FNS = { unis: loadUnis, progs: loadProgs, ai: loadAI, schols: loadSchols, news: loadNews, forms: loadForms, anns: loadAnns, pays: loadPays, users: loadUsers, appear: loadAppear, stext: loadStext, feats: loadFeats, pstack: pkLoad };
+
+function go(id) {
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('on'); });
+  document.querySelectorAll('.pg').forEach(function(p) { p.classList.remove('on'); });
+  var pg = el(id); if (pg) pg.classList.add('on');
+  var idx = PAGE_IDS.indexOf(id);
+  var tabs = document.querySelectorAll('.tab');
+  if (tabs[idx]) tabs[idx].classList.add('on');
+  if (PAGE_FNS[id]) PAGE_FNS[id]();
+}
+
+// DASHBOARD
+function loadDash() {
+  GET('universities', 'active=eq.true&select=id').then(function(d) { var e = el('d1'); if (e) e.textContent = (d||[]).length; }).catch(function(){});
+  GET('programmes', 'active=eq.true&select=id').then(function(d) { var e = el('d2'); if (e) e.textContent = (d||[]).length; }).catch(function(){});
+  GET('profiles', 'select=id').then(function(d) { var e = el('d3'); if (e) e.textContent = (d||[]).length; }).catch(function(){});
+  GET('payments', 'status=eq.success&select=amount').then(function(d) { var e = el('d4'); if (e) e.textContent = Math.round((d||[]).reduce(function(s,x){return s+(x.amount||0);},0)/100); }).catch(function(){});
+  GET('payments', 'status=eq.pending&select=id').then(function(d) { var e = el('d5'); if (e) e.textContent = (d||[]).length; }).catch(function(){});
+  GET('ai_inbox', 'status=eq.pending&select=id').then(function(d) { var e = el('d6'); if (e) e.textContent = (d||[]).length; }).catch(function(){});
+}
+
+// UNIVERSITIES
+var _unis = [], _pc = {};
+function loadUnis() {
+  Promise.all([GET('universities','order=name.asc&select=*'), GET('programmes','select=university_id')])
+  .then(function(r) {
+    _unis = r[0]||[]; _pc = {};
+    (r[1]||[]).forEach(function(p) { _pc[p.university_id] = (_pc[p.university_id]||0)+1; });
+    _unis.forEach(function(u) { u._pc = _pc[u.id]||0; });
+    uniRows(_unis);
+  }).catch(function(){});
+}
+function uniRows(data) {
+  var tb = el('uni-tb'); if (!tb) return;
+  if (!data.length) { tb.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:#475569">None found</td></tr>'; return; }
+  tb.innerHTML = data.map(function(u) {
+    return '<tr>'
+      + '<td><span class="bge bgp">' + u.code + '</span></td>'
+      + '<td style="font-weight:600;color:#f1f5f9">' + u.name + '</td>'
+      + '<td><span class="bge ' + (u.type==='Public'?'bgg':u.type==='Private'?'bgo':'bgb') + '">' + (u.type||'-') + '</span></td>'
+      + '<td style="color:#94a3b8;font-size:11px">' + (u.region||'-') + '</td>'
+      + '<td><span class="bge ' + (u.active?'bgg':'bgr') + '">' + (u.active?'Active':'Hidden') + '</span></td>'
+      + '<td style="color:#94a3b8">' + u._pc + '</td>'
+      + '<td><button class="btn bs" onclick="uniEdit(\'' + u.id + '\')">Edit</button>'
+      + '<button class="btn ' + (u.active?'bo':'bg') + '" onclick="uniToggle(\'' + u.id + '\',' + !u.active + ')">' + (u.active?'Hide':'Show') + '</button>'
+      + '<button class="btn br" onclick="uniDel(\'' + u.id + '\')">Del</button></td>'
+      + '</tr>';
+  }).join('');
+}
+function uniSearch(q) { uniRows(q ? _unis.filter(function(u){return (u.name+u.code+u.region).toLowerCase().indexOf(q.toLowerCase())>=0;}) : _unis); }
+function uniToggle(id, v) { PATCH('universities',id,{active:v,updated_at:new Date().toISOString()}).then(function(){toast(v?'Shown':'Hidden',true);loadUnis();}); }
+function uniDel(id) { if (!confirm('Delete university?')) return; DEL('universities',id).then(function(){toast('Deleted',true);loadUnis();}); }
+function uniEdit(id) { var u=_unis.find(function(x){return x.id===id;}); if(u) uniModal(u); }
+function uniModal(u) {
+  var regs = ['Greater Accra','Ashanti','Central','Eastern','Western','Western North','Volta','Oti','Northern','North East','Savannah','Upper East','Upper West','Bono','Bono East','Ahafo'];
+  var types = ['Public','Private','Technical','Distance'];
+  var rOpts = regs.map(function(r){return '<option'+(u&&u.region===r?' selected':'')+'>'+r+'</option>';}).join('');
+  var tOpts = types.map(function(t){return '<option'+(u&&u.type===t?' selected':'')+'>'+t+'</option>';}).join('');
+  var html = '<h3>' + (u?'Edit':'Add') + ' University</h3>'
+    + '<label class="lbl">Code</label><input type="text" class="fi" id="uc" value="' + (u?u.code:'') + '" placeholder="UCC"/>'
+    + '<label class="lbl">Full Name</label><input type="text" class="fi" id="un" value="' + (u?u.name.replace(/"/g,'&quot;'):'') + '" placeholder="University of..."/>'
+    + '<label class="lbl">Short Name</label><input type="text" class="fi" id="us" value="' + (u?u.short_name||'':'') + '" placeholder="UCC"/>'
+    + '<div class="g2">'
+    + '<div><label class="lbl">Type</label><select class="fi" id="ut" style="margin:0">' + tOpts + '</select></div>'
+    + '<div><label class="lbl">Founded</label><input type="number" class="fi" id="uf" value="' + (u?u.founded||'':'') + '" placeholder="1962" style="margin:0"/></div>'
+    + '<div><label class="lbl">City</label><input type="text" class="fi" id="ul" value="' + (u?u.location||'':'') + '" placeholder="Accra" style="margin:0"/></div>'
+    + '<div><label class="lbl">Region</label><select class="fi" id="ur" style="margin:0">' + rOpts + '</select></div>'
+    + '</div>'
+    + '<label class="lbl" style="margin-top:9px">Website</label><input type="text" class="fi" id="uw" value="' + (u?u.website||'':'') + '" placeholder="https://"/>'
+    + '<div style="display:flex;gap:6px">'
+    + '<button class="btn bp" onclick="uniSave(\'' + (u?u.id:'') + '\')">Save</button>'
+    + '<button class="btn bs" onclick="closeMd()">Cancel</button>'
+    + '</div>';
+  openMd(html);
+}
+function uniSave(id) {
+  var code = val('uc').trim().toUpperCase(), name = val('un').trim();
+  if (!code||!name) { toast('Code and name required',false); return; }
+  var b = { code:code, name:name, short_name:val('us').trim()||code, type:val('ut'), location:val('ul').trim(), region:val('ur'), founded:parseInt(val('uf'))||null, website:val('uw').trim(), active:true, updated_at:new Date().toISOString() };
+  (id?PATCH('universities',id,b):POST('universities',b)).then(function(){toast('Saved',true);closeMd();loadUnis();}).catch(function(){toast('Error',false);});
+}
+
+// PROGRAMMES
+var _progs=[], _pUnis=[], _fProgs=[], _pPg=0, PER=50;
+function loadProgs() {
+  Promise.all([GET('programmes','order=created_at.desc&select=*'), GET('universities','select=id,code,name,short_name&order=name.asc')])
+  .then(function(r) {
+    _progs=r[0]||[]; _fProgs=_progs; _pUnis=r[1]||[]; _pPg=0;
+    var sel=el('prog-uf');
+    if(sel){while(sel.options.length>1)sel.remove(1);_pUnis.forEach(function(u){var o=document.createElement('option');o.value=u.id;o.textContent=u.short_name||u.code;sel.appendChild(o);});}
+    progRows();
+    var c=el('prog-ct'); if(c) c.textContent=_progs.length+' programmes';
+  }).catch(function(){});
+}
+function progFilter() {
+  var q=val('prog-s'), uid=val('prog-uf'), deg=val('prog-df');
+  _fProgs=_progs.filter(function(p){return(!q||p.name.toLowerCase().indexOf(q.toLowerCase())>=0)&&(!uid||p.university_id===uid)&&(!deg||p.degree===deg);});
+  _pPg=0; progRows();
+}
+function progRows() {
+  var tb=el('prog-tb'); if(!tb) return;
+  var umap={}; _pUnis.forEach(function(u){umap[u.id]=u.short_name||u.code;});
+  var sl=_fProgs.slice(_pPg*PER,(_pPg+1)*PER);
+  if(!sl.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;padding:20px;color:#475569">No programmes</td></tr>';el('prog-pag').innerHTML='';return;}
+  tb.innerHTML=sl.map(function(p){
+    return '<tr>'
+      +'<td><span class="bge bgp">'+(umap[p.university_id]||'?')+'</span></td>'
+      +'<td style="color:#f1f5f9;font-weight:500">'+p.name+'</td>'
+      +'<td><span class="bge bgy">'+(p.degree||'-')+'</span></td>'
+      +'<td style="color:#94a3b8">'+(p.cutoff||'-')+'</td>'
+      +'<td style="color:#94a3b8;font-size:11px">'+(p.fee||'-')+'</td>'
+      +'<td><span class="bge '+(p.active?'bgg':'bgr')+'">'+(p.active?'Active':'Hidden')+'</span></td>'
+      +'<td><button class="btn bs" onclick="progEdit(\''+p.id+'\')">Edit</button>'
+      +'<button class="btn '+(p.active?'bo':'bg')+'" onclick="progToggle(\''+p.id+'\','+!p.active+')">'+(p.active?'Hide':'Show')+'</button>'
+      +'<button class="btn br" onclick="progDel(\''+p.id+'\')">Del</button></td>'
+      +'</tr>';
+  }).join('');
+  var pages=Math.ceil(_fProgs.length/PER);
+  var pag=el('prog-pag');
+  if(pag&&pages>1){
+    pag.innerHTML='<div style="display:flex;gap:4px;flex-wrap:wrap">'+Array.from({length:Math.min(pages,15)},function(_,i){
+      return '<button onclick="_pPg='+i+';progRows()" style="padding:3px 8px;border-radius:5px;border:1px solid #ffffff12;background:'+(i===_pPg?'#7C3AED':'#1e1e32')+';color:'+(i===_pPg?'#fff':'#94a3b8')+';cursor:pointer;font-size:11px">'+(i+1)+'</button>';
+    }).join('')+'</div>';
+  } else if(pag) pag.innerHTML='';
+}
+function progToggle(id,v){PATCH('programmes',id,{active:v}).then(function(){var p=_progs.find(function(x){return x.id===id;});if(p)p.active=v;progRows();toast(v?'Shown':'Hidden',true);});}
+function progDel(id){if(!confirm('Delete?'))return;DEL('programmes',id).then(function(){_progs=_progs.filter(function(p){return p.id!==id;});_fProgs=_fProgs.filter(function(p){return p.id!==id;});progRows();toast('Deleted',true);});}
+function progEdit(id){var p=_progs.find(function(x){return x.id===id;});if(p)progModal(p);}
+function progModal(p) {
+  var uOpts=_pUnis.map(function(u){return '<option value="'+u.id+'"'+(p&&p.university_id===u.id?' selected':'')+'>'+u.name+'</option>';}).join('');
+  var dOpts=['BSc','BA','BEd','BTech','BBA','LLB','MBChB','HND','Diploma','Certificate'].map(function(d){return '<option'+(p&&p.degree===d?' selected':'')+'>'+d+'</option>';}).join('');
+  var html='<h3>'+(p?'Edit':'Add')+' Programme</h3>'
+    +'<label class="lbl">University</label><select class="fi" id="pu">'+uOpts+'</select>'
+    +'<label class="lbl">Programme Name</label><input type="text" class="fi" id="pn" value="'+(p?p.name.replace(/"/g,'&quot;'):'')+'" placeholder="Computer Science"/>'
+    +'<div class="g3">'
+    +'<div><label class="lbl">Degree</label><select class="fi" id="pd" style="margin:0">'+dOpts+'</select></div>'
+    +'<div><label class="lbl">Duration</label><input type="text" class="fi" id="pdu" value="'+(p?p.duration||'':'')+'" placeholder="4 years" style="margin:0"/></div>'
+    +'<div><label class="lbl">Cut-off</label><input type="number" class="fi" id="pco" value="'+(p?p.cutoff||'':'')+'" placeholder="24" style="margin:0"/></div>'
+    +'</div>'
+    +'<label class="lbl" style="margin-top:9px">Tracks (comma separated)</label><input type="text" class="fi" id="pt" value="'+(p&&p.required_track?p.required_track.join(', '):'')+'" placeholder="General Science, Business"/>'
+    +'<label class="lbl">Fee</label><input type="text" class="fi" id="pf" value="'+(p?p.fee||'':'')+'" placeholder="GHC 3,500+/yr"/>'
+    +'<label class="lbl">Careers</label><textarea class="fi" id="pca">'+(p?p.careers||'':'')+'</textarea>'
+
+```
++'<div style="display:flex;gap:6px"><button class="btn bp" onclick="progSave(\''+(p?p.id:'')+'\')">Save</button><button class="btn bs" onclick="closeMd()">Cancel</button></div>';
+```
+
+openMd(html);
+}
+function progSave(id) {
+var n=val(‘pn’).trim(), u=val(‘pu’);
+if(!n||!u){toast(‘Name and university required’,false);return;}
+var tracks=val(‘pt’).split(’,’).map(function(t){return t.trim();}).filter(Boolean);
+var b={university_id:u,name:n,degree:val(‘pd’),duration:val(‘pdu’).trim(),cutoff:parseInt(val(‘pco’))||null,required_track:tracks,fee:val(‘pf’).trim(),careers:val(‘pca’).trim(),active:true,updated_at:new Date().toISOString()};
+(id?PATCH(‘programmes’,id,b):POST(‘programmes’,b)).then(function(){toast(‘Saved’,true);closeMd();loadProgs();}).catch(function(){toast(‘Error’,false);});
+}
+
+// AI INBOX
+function loadAI() {
+var st=val(‘ai-f’);
+GET(‘ai_inbox’,(st?‘status=eq.’+st:’’)+’&order=created_at.desc&select=*’).then(function(msgs){
+var e=el(‘ai-list’); if(!e) return;
+if(!msgs||!msgs.length){e.innerHTML=’<div style="text-align:center;padding:40px;color:#475569"><div style="font-size:36px;margin-bottom:8px">🤖</div><p>No questions yet.</p></div>’;return;}
+e.innerHTML=msgs.map(function(m){
+var html=’<div class="card" style="margin-bottom:10px"><div class="cb">’
++’<div style="display:flex;justify-content:space-between;margin-bottom:8px">’
++’<span class="bge '+(m.status==='pending'?'bgr':'bgg')+'">’+(m.status===‘pending’?‘Unanswered’:‘Answered’)+’</span>’
++’<span style="font-size:11px;color:#475569">’+new Date(m.created_at).toLocaleString()+’</span></div>’
++’<p style="font-size:13px;color:#f1f5f9;margin-bottom:6px;line-height:1.5">’+m.question+’</p>’
++’<p style="font-size:11px;color:#475569;margin-bottom:10px">’+( m.user_email||‘Anonymous’)+’</p>’;
+if(m.status===‘answered’&&m.reply) html+=’<div style="background:#10b98112;border:1px solid #10b98133;border-radius:8px;padding:10px;font-size:12px;color:#6ee7b7;margin-bottom:8px">Your reply: ‘+m.reply+’</div>’;
+if(m.status===‘pending’){
+html+=’<div style="display:flex;gap:8px;margin-top:8px">’
++’<textarea id="rep-'+m.id+'" style="flex:1;padding:8px;background:#1e1e32;border:1px solid #ffffff12;border-radius:7px;color:#f1f5f9;font-size:12px;font-family:Arial;resize:none;min-height:55px;outline:none" placeholder="Type reply here..."></textarea>’
++’<div style="display:flex;flex-direction:column;gap:5px">’
++’<button class="btn bp" onclick="aiReply(\''+m.id+'\')">Send</button>’
++’<button class="btn br" onclick="aiDismiss(\''+m.id+'\')">Dismiss</button>’
++’</div></div>’;
+} else {
+html+=’<button class="btn bs" onclick="aiReopen(\''+m.id+'\')">Reopen</button>’;
+}
+html+=’</div></div>’;
+return html;
+}).join(’’);
+}).catch(function(){
+var e=el(‘ai-list’);
+if(e) e.innerHTML=’<div class="card"><div class="cb"><p style="color:#fcd34d;margin-bottom:10px">Run this SQL in Supabase to enable AI Inbox:</p>’
++’<pre style="background:#0f0f1a;padding:12px;border-radius:8px;font-size:11px;overflow:auto;color:#94a3b8">’
++‘CREATE TABLE IF NOT EXISTS public.ai_inbox (\n  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,\n  question text NOT NULL,\n  user_id uuid, user_email text,\n  status text DEFAULT 'pending',\n  reply text, replied_at timestamptz,\n  created_at timestamptz DEFAULT now()\n);\nGRANT ALL ON public.ai_inbox TO anon;</pre></div></div>’;
+});
+}
+function aiReply(id){var r=(el(‘rep-’+id)||{}).value||’’;if(!r.trim()){toast(‘Type a reply’,false);return;}PATCH(‘ai_inbox’,id,{reply:r.trim(),status:‘answered’,replied_at:new Date().toISOString()}).then(function(){toast(‘Sent’,true);loadAI();});}
+function aiDismiss(id){PATCH(‘ai_inbox’,id,{status:‘answered’,reply:’[Dismissed]’}).then(function(){toast(‘Dismissed’,true);loadAI();});}
+function aiReopen(id){PATCH(‘ai_inbox’,id,{status:‘pending’,reply:null}).then(function(){toast(‘Reopened’,true);loadAI();});}
+
+// SCHOLARSHIPS
+function loadSchols() {
+GET(‘scholarships’,‘order=created_at.desc&select=*’).then(function(d){
+var e=el(‘schol-list’); if(!e) return;
+if(!d||!d.length){e.innerHTML=’<p style="color:#475569;padding:16px">No scholarships yet.</p>’;return;}
+e.innerHTML=d.map(function(s){
+return ‘<div class="card"><div class="ch"><div><h3>’+s.title+’</h3>’
++’<span style="font-size:11px;color:#94a3b8">’+(s.provider||’’)+(s.deadline?’ · Deadline: ‘+s.deadline:’’)+’</span></div>’
++’<div style="display:flex;gap:4px"><span class="bge '+(s.active?'bgg':'bgr')+'">’+(s.active?‘Active’:‘Hidden’)+’</span>’
++’<button class="btn bs" onclick="scholEdit(\''+s.id+'\')">Edit</button>’
++’<button class="btn br" onclick="scholDel(\''+s.id+'\')">Del</button></div></div>’
++’<div class="cb" style="font-size:12px;color:#94a3b8">’+(s.description||’’)+’</div></div>’;
+}).join(’’);
+}).catch(function(){});
+}
+function scholEdit(id){GET(‘scholarships’,‘id=eq.’+id+’&select=*’).then(function(d){if(d&&d[0])scholModal(d[0]);});}
+function scholModal(s) {
+openMd(’<h3>’+(s?‘Edit’:‘Add’)+’ Scholarship</h3>’
++’<label class="lbl">Title</label><input type=“text” class=“fi” id=“sc1” value=”’+(s?s.title.replace(/”/g,’"’):’’)+’” placeholder=“GETFund Scholarship”/>’
++’<label class="lbl">Provider</label><input type="text" class="fi" id="sc2" value="'+(s?s.provider||'':'')+'" placeholder="GETFund"/>’
++’<div class="g2"><div><label class="lbl">Amount</label><input type="text" class="fi" id="sc3" value="'+(s?s.amount||'':'')+'" placeholder="Full tuition" style="margin:0"/></div>’
++’<div><label class="lbl">Deadline</label><input type="date" class="fi" id="sc4" value="'+(s?s.deadline||'':'')+'" style="margin:0"/></div></div>’
++’<label class="lbl" style="margin-top:9px">Description</label><textarea class="fi" id="sc5">’+(s?s.description||’’:’’)+’</textarea>’
++’<label class="lbl">Apply Link</label><input type="text" class="fi" id="sc6" value="'+(s?s.link||'':'')+'" placeholder="https://"/>’
++’<div style="display:flex;gap:6px"><button class="btn bp" onclick="scholSave(\''+(s?s.id:'')+'\')">Save</button><button class="btn bs" onclick="closeMd()">Cancel</button></div>’);
+}
+function scholSave(id){
+var t=val(‘sc1’).trim();if(!t){toast(‘Title required’,false);return;}
+var b={title:t,provider:val(‘sc2’).trim(),amount:val(‘sc3’).trim(),deadline:val(‘sc4’)||null,description:val(‘sc5’).trim(),link:val(‘sc6’).trim(),active:true};
+(id?PATCH(‘scholarships’,id,b):POST(‘scholarships’,b)).then(function(){toast(‘Saved’,true);closeMd();loadSchols();}).catch(function(){toast(‘Error’,false);});
+}
+function scholDel(id){if(!confirm(‘Delete?’))return;DEL(‘scholarships’,id).then(function(){toast(‘Deleted’,true);loadSchols();});}
+
+// NEWS
+function loadNews() {
+GET(‘news’,‘order=created_at.desc&select=*’).then(function(d){
+var e=el(‘news-list’); if(!e) return;
+if(!d||!d.length){e.innerHTML=’<p style="color:#475569;padding:16px">No news yet.</p>’;return;}
+e.innerHTML=d.map(function(n){
+return ‘<div class="card"><div class="ch"><div><h3>’+n.title+’</h3>’
++’<span style="font-size:11px;color:#94a3b8">’+(n.category||‘General’)+’ · ‘+new Date(n.created_at).toLocaleDateString()+’</span></div>’
++’<div style="display:flex;gap:4px">’+(n.pinned?’<span class="bge bgo">Pinned</span>’:’’)
++’<span class="bge '+(n.active?'bgg':'bgr')+'">’+(n.active?‘Live’:‘Draft’)+’</span>’
++’<button class="btn bs" onclick="newsEdit(\''+n.id+'\')">Edit</button>’
++’<button class="btn br" onclick="newsDel(\''+n.id+'\')">Del</button></div></div>’
++’<div class="cb" style="font-size:12px;color:#94a3b8">’+(n.summary||’’)+’</div></div>’;
+}).join(’’);
+}).catch(function(){});
+}
+function newsEdit(id){GET(‘news’,‘id=eq.’+id+’&select=*’).then(function(d){if(d&&d[0])newsModal(d[0]);});}
+function newsModal(n) {
+var cats=[‘General’,‘Admissions’,‘Results’,‘Scholarships’,‘Events’,‘Announcements’];
+var cOpts=cats.map(function(c){return ‘<option’+(n&&n.category===c?’ selected’:’’)+’>’+c+’</option>’;}).join(’’);
+openMd(’<h3>’+(n?‘Edit’:‘Add’)+’ News</h3>’
++’<label class="lbl">Title</label><input type=“text” class=“fi” id=“n1” value=”’+(n?n.title.replace(/”/g,’"’):’’)+’” placeholder=“News title”/>’
++’<div class="g2"><div><label class="lbl">Category</label><select class="fi" id="n2" style="margin:0">’+cOpts+’</select></div>’
++’<div><label class="lbl">Image URL</label><input type="text" class="fi" id="n3" value="'+(n?n.image_url||'':'')+'" placeholder="https://" style="margin:0"/></div></div>’
++’<label class="lbl" style="margin-top:9px">Summary</label><input type="text" class="fi" id="n4" value="'+(n?n.summary||'':'')+'" placeholder="Short description"/>’
++’<label class="lbl">Full Content</label><textarea class="fi" id="n5">’+(n?n.content||’’:’’)+’</textarea>’
++’<label class="lbl">Source Link</label><input type="text" class="fi" id="n6" value="'+(n?n.link||'':'')+'" placeholder="https://"/>’
++’<div style="display:flex;gap:6px"><button class="btn bp" onclick="newsSave(\''+(n?n.id:'')+'\')">’+( n?‘Update’:‘Publish’)+’</button><button class="btn bs" onclick="closeMd()">Cancel</button></div>’);
+}
+function newsSave(id){
+var t=val(‘n1’).trim();if(!t){toast(‘Title required’,false);return;}
+var b={title:t,category:val(‘n2’),summary:val(‘n4’).trim(),content:val(‘n5’).trim(),link:val(‘n6’).trim(),image_url:val(‘n3’).trim(),active:true};
+(id?PATCH(‘news’,id,b):POST(‘news’,b)).then(function(){toast(‘Saved’,true);closeMd();loadNews();}).catch(function(){toast(‘Error’,false);});
+}
+function newsDel(id){if(!confirm(‘Delete?’))return;DEL(‘news’,id).then(function(){toast(‘Deleted’,true);loadNews();});}
+
+// FORMS
+function loadForms() {
+Promise.all([GET(‘admission_forms’,‘order=created_at.desc&select=*’),GET(‘universities’,‘select=id,name’)]).then(function(r){
+var e=el(‘forms-list’); if(!e) return;
+var umap={}; (r[1]||[]).forEach(function(u){umap[u.id]=u.name;});
+var forms=r[0]||[];
+if(!forms.length){e.innerHTML=’<p style="color:#475569;padding:16px">No forms yet.</p>’;return;}
+e.innerHTML=’<div class="card"><table><thead><tr><th>University</th><th>Title</th><th>Price</th><th>Deadline</th><th>Status</th><th>Actions</th></tr></thead><tbody>’
++forms.map(function(f){
+return ‘<tr>’
++’<td style="color:#94a3b8;font-size:11px">’+(umap[f.university_id]||’-’)+’</td>’
++’<td style="color:#f1f5f9">’+f.title+’</td>’
++’<td>GHC ‘+(f.price||0)+’</td>’
++’<td style="font-size:11px">’+(f.deadline||’-’)+’</td>’
++’<td><span class="bge '+(f.open?'bgg':'bgr')+'">’+(f.open?‘Open’:‘Closed’)+’</span></td>’
++’<td><button class="btn bs" onclick="formEdit(\''+f.id+'\')">Edit</button>’
++’<button class="btn '+(f.open?'br':'bg')+'" onclick="formToggle(\''+f.id+'\','+!f.open+')">’+(f.open?‘Close’:‘Open’)+’</button>’
++’<button class="btn br" onclick="formDel(\''+f.id+'\')">Del</button></td>’
++’</tr>’;
+}).join(’’)+’</tbody></table></div>’;
+}).catch(function(){});
+}
+function formEdit(id){GET(‘admission_forms’,‘id=eq.’+id+’&select=*’).then(function(d){if(d&&d[0])formModal(d[0]);});}
+function formModal(f) {
+GET(‘universities’,‘select=id,name&order=name.asc’).then(function(unis){
+var uOpts=(unis||[]).map(function(u){return ‘<option value=”’+u.id+’”’+(f&&f.university_id===u.id?’ selected’:’’)+’>’+u.name+’</option>’;}).join(’’);
+openMd(’<h3>’+(f?‘Edit’:‘Add’)+’ Form</h3>’
++’<label class="lbl">University</label><select class="fi" id="af1">’+uOpts+’</select>’
++’<label class="lbl">Title</label><input type=“text” class=“fi” id=“af2” value=”’+(f?f.title.replace(/”/g,’"’):’’)+’” placeholder=“2025/2026 Admission Form”/>’
++’<div class="g2"><div><label class="lbl">Price (GHC)</label><input type="number" class="fi" id="af3" value="'+(f?f.price||'':'')+'" placeholder="150" style="margin:0"/></div>’
++’<div><label class="lbl">Deadline</label><input type="date" class="fi" id="af4" value="'+(f?f.deadline||'':'')+'" style="margin:0"/></div></div>’
++’<label class="lbl" style="margin-top:9px">Form Link</label><input type="text" class="fi" id="af5" value="'+(f?f.link||'':'')+'" placeholder="https://"/>’
++’<label class="lbl">Notes</label><textarea class="fi" id="af6">’+(f?f.notes||’’:’’)+’</textarea>’
++’<div style="display:flex;gap:6px"><button class="btn bp" onclick="formSave(\''+(f?f.id:'')+'\')">Save</button><button class="btn bs" onclick="closeMd()">Cancel</button></div>’);
+});
+}
+function formSave(id){
+var b={university_id:val(‘af1’),title:val(‘af2’).trim(),price:parseFloat(val(‘af3’))||0,deadline:val(‘af4’)||null,link:val(‘af5’).trim(),notes:val(‘af6’).trim(),open:true};
+(id?PATCH(‘admission_forms’,id,b):POST(‘admission_forms’,b)).then(function(){toast(‘Saved’,true);closeMd();loadForms();}).catch(function(){toast(‘Error’,false);});
+}
+function formToggle(id,v){PATCH(‘admission_forms’,id,{open:v}).then(function(){toast(v?‘Opened’:‘Closed’,true);loadForms();});}
+function formDel(id){if(!confirm(‘Delete?’))return;DEL(‘admission_forms’,id).then(function(){toast(‘Deleted’,true);loadForms();});}
+
+// ANNOUNCEMENTS
+function loadAnns() {
+GET(‘announcements’,‘order=created_at.desc&select=*’).then(function(d){
+var e=el(‘ann-list’); if(!e) return;
+if(!d||!d.length){e.innerHTML=’<p style="color:#475569;padding:16px">No announcements yet.</p>’;return;}
+e.innerHTML=d.map(function(a){
+return ‘<div class="card"><div class="ch">’
++’<div style="display:flex;align-items:center;gap:8px">’
++’<span style="width:11px;height:11px;border-radius:50%;background:'+(a.color||'#7C3AED')+';display:inline-block"></span>’
++’<span style="color:#f1f5f9;font-weight:600">’+a.text+’</span></div>’
++’<div style="display:flex;gap:4px"><span class="bge '+(a.active?'bgg':'bgr')+'">’+(a.active?‘Live’:‘Hidden’)+’</span>’
++’<button class="btn bs" onclick="annEdit(\''+a.id+'\')">Edit</button>’
++’<button class="btn '+(a.active?'bo':'bg')+'" onclick="annToggle(\''+a.id+'\','+!a.active+')">’+(a.active?‘Hide’:‘Show’)+’</button>’
++’<button class="btn br" onclick="annDel(\''+a.id+'\')">Del</button></div></div></div>’;
+}).join(’’);
+}).catch(function(){});
+}
+function annEdit(id){GET(‘announcements’,‘id=eq.’+id+’&select=*’).then(function(d){if(d&&d[0])annModal(d[0]);});}
+function annModal(a) {
+openMd(’<h3>’+(a?‘Edit’:‘New’)+’ Announcement</h3>’
++’<label class="lbl">Text</label><input type=“text” class=“fi” id=“an1” value=”’+(a?a.text.replace(/”/g,’"’):’’)+’” placeholder=“UniPredict is now live!”/>’
++’<div class="g2"><div><label class="lbl">Color</label><input type="color" id="an2" value="'+(a?a.color||'#7C3AED':'#7C3AED')+'" style="width:100%;height:36px;border:1px solid #ffffff18;border-radius:7px;cursor:pointer;padding:3px;background:none;margin-bottom:9px;display:block"/></div>’
++’<div><label class="lbl">Link (optional)</label><input type="text" class="fi" id="an3" value="'+(a?a.link||'':'')+'" placeholder="https://" style="margin:0"/></div></div>’
++’<div style="display:flex;gap:6px;margin-top:6px"><button class="btn bp" onclick="annSave(\''+(a?a.id:'')+'\')">Save</button><button class="btn bs" onclick="closeMd()">Cancel</button></div>’);
+}
+function annSave(id){
+var t=val(‘an1’).trim();if(!t){toast(‘Text required’,false);return;}
+var c=el(‘an2’); var b={text:t,color:c?c.value:’#7C3AED’,link:val(‘an3’).trim(),active:true};
+(id?PATCH(‘announcements’,id,b):POST(‘announcements’,b)).then(function(){toast(‘Saved’,true);closeMd();loadAnns();}).catch(function(){toast(‘Error’,false);});
+}
+function annToggle(id,v){PATCH(‘announcements’,id,{active:v}).then(function(){toast(v?‘Live’:‘Hidden’,true);loadAnns();});}
+function annDel(id){if(!confirm(‘Delete?’))return;DEL(‘announcements’,id).then(function(){toast(‘Deleted’,true);loadAnns();});}
+
+// PAYMENTS
+function loadPays() {
+var st=val(‘pay-f’);
+GET(‘payments’,(st?‘status=eq.’+st:’’)+’&order=created_at.desc&select=*’).then(function(d){
+var tb=el(‘pay-tb’); if(!tb) return;
+var rev=(d||[]).filter(function(p){return p.status===‘success’;}).reduce(function(s,p){return s+(p.amount||0);},0);
+var sm=el(‘pay-sum’); if(sm) sm.textContent=(d||[]).length+’ records - GHC ‘+Math.round(rev/100)+’ collected’;
+if(!d||!d.length){tb.innerHTML=’<tr><td colspan="6" style="text-align:center;padding:20px;color:#475569">No payments</td></tr>’;return;}
+tb.innerHTML=d.map(function(p){
+return ‘<tr>’
++’<td style="color:#94a3b8;font-size:11px">’+new Date(p.created_at).toLocaleDateString()+’</td>’
++’<td style="color:#f1f5f9">’+(p.user_email||p.user_id||’-’)+’</td>’
++’<td style="font-weight:600;color:#f1f5f9">GHC ‘+((p.amount||0)/100).toFixed(2)+’</td>’
++’<td style="color:#94a3b8;font-size:11px">’+(p.reference||’-’)+’</td>’
++’<td><span class="bge '+(p.status==='success'?'bgg':p.status==='pending'?'bgo':p.status==='refunded'?'bgb':'bgr')+'">’+p.status+’</span></td>’
++’<td>’+(p.status===‘pending’?’<button class="btn bg" onclick="payApprove(\''+p.id+'\')">Approve</button>’:’’)
++(p.status===‘success’?’<button class="btn bs" onclick="payRefund(\''+p.id+'\')">Refund</button>’:’’)+’</td>’
++’</tr>’;
+}).join(’’);
+}).catch(function(){});
+}
+function payApprove(id){PATCH(‘payments’,id,{status:‘success’,verified_at:new Date().toISOString()}).then(function(){toast(‘Approved’,true);loadPays();});}
+function payRefund(id){if(!confirm(‘Refund?’))return;PATCH(‘payments’,id,{status:‘refunded’}).then(function(){toast(‘Refunded’,true);loadPays();});}
+
+// USERS
+var _users=[];
+function loadUsers() {
+Promise.all([GET(‘profiles’,‘order=created_at.desc&select=*’),GET(‘payments’,‘status=eq.success&select=user_id,amount’),GET(‘checks’,‘select=user_id’)])
+.then(function(r){
+var pm={},cm={};
+(r[1]||[]).forEach(function(x){pm[x.user_id]=(pm[x.user_id]||0)+(x.amount||0);});
+(r[2]||[]).forEach(function(x){cm[x.user_id]=(cm[x.user_id]||0)+1;});
+_users=(r[0]||[]).map(function(x){return Object.assign({},x,{_p:pm[x.id]||0,_c:cm[x.id]||0});});
+var ct=el(‘user-ct’); if(ct) ct.textContent=_users.length+’ users’;
+userRows(_users);
+}).catch(function(){GET(‘profiles’,’select=*’).then(function(d){_users=d||[];userRows(_users);}).catch(function(){});});
+}
+function userSearch(q){userRows(q?_users.filter(function(u){return(u.email||u.full_name||’’).toLowerCase().indexOf(q.toLowerCase())>=0;}):_users);}
+function userRows(data){
+var tb=el(‘user-tb’); if(!tb) return;
+if(!data.length){tb.innerHTML=’<tr><td colspan="6" style="text-align:center;padding:20px;color:#475569">No users</td></tr>’;return;}
+tb.innerHTML=data.map(function(u){
+return ‘<tr>’
++’<td style="color:#f1f5f9;font-weight:500">’+(u.full_name||u.name||’-’)+’</td>’
++’<td style="color:#94a3b8;font-size:11px">’+(u.email||’-’)+’</td>’
++’<td style="color:#94a3b8;font-size:11px">’+new Date(u.created_at).toLocaleDateString()+’</td>’
++’<td style="color:'+((u._p||0)>0?'#10b981':'#475569')+'">GHC ‘+((u._p||0)/100).toFixed(2)+’</td>’
++’<td style="color:#94a3b8">’+(u._c||0)+’</td>’
++’<td><button class="btn bs" onclick="userView(\''+u.id+'\')">View</button></td>’
++’</tr>’;
+}).join(’’);
+}
+function userView(id){
+var u=_users.find(function(x){return x.id===id;}); if(!u) return;
+GET(‘payments’,‘user_id=eq.’+id+’&select=*’).then(function(pays){
+openMd(’<h3>’+(u.full_name||u.email||‘User’)+’</h3>’
++’<div class="row"><div><h4>Email</h4></div><span style="color:#94a3b8">’+(u.email||’-’)+’</span></div>’
++’<div class="row"><div><h4>Joined</h4></div><span style="color:#94a3b8">’+new Date(u.created_at).toLocaleString()+’</span></div>’
++’<div class="row"><div><h4>Total Paid</h4></div><span style="color:#10b981">GHC ‘+((u._p||0)/100).toFixed(2)+’</span></div>’
++’<div class="row"><div><h4>Checks Done</h4></div><span style="color:#94a3b8">’+(u._c||0)+’</span></div>’
++’<p style="font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;margin:12px 0 8px">Payment History</p>’
++((pays||[]).length?’<table><thead><tr><th>Date</th><th>Amount</th><th>Status</th></tr></thead><tbody>’
++pays.map(function(p){return ‘<tr><td>’+new Date(p.created_at).toLocaleDateString()+’</td><td>GHC ‘+((p.amount||0)/100).toFixed(2)+’</td><td><span class="bge '+(p.status==='success'?'bgg':'bgo')+'">’+p.status+’</span></td></tr>’;}).join(’’)
++’</tbody></table>’:’<p style="color:#475569;font-size:12px">No payments yet.</p>’)
++’<button class="btn bs" onclick="closeMd()" style="margin-top:12px;width:100%">Close</button>’);
+});
+}
+
+// APPEARANCE
+function loadAppear() {
+GET(‘settings’,‘key=in.(“primary_color”,“accent_color”,“bg_color”,“card_color”,“font_heading”,“font_body”)&select=key,value’).then(function(d){
+(d||[]).forEach(function(s){
+if(s.key===‘primary_color’){var e=el(‘c1’);var et=el(‘c1t’);if(e)e.value=s.value;if(et)et.value=s.value;}
+if(s.key===‘accent_color’){var e=el(‘c2’);var et=el(‘c2t’);if(e)e.value=s.value;if(et)et.value=s.value;}
+if(s.key===‘bg_color’){var e=el(‘c3’);var et=el(‘c3t’);if(e)e.value=s.value;if(et)et.value=s.value;}
+if(s.key===‘card_color’){var e=el(‘c4’);var et=el(‘c4t’);if(e)e.value=s.value;if(et)et.value=s.value;}
+if(s.key===‘font_heading’){var e=el(‘fh’);if(e)e.value=s.value;}
+if(s.key===‘font_body’){var e=el(‘fb’);if(e)e.value=s.value;}
+});
+updG();
+}).catch(function(){});
+}
+function updG(){var p=(el(‘c1’)||{}).value||’#7C3AED’,a=(el(‘c2’)||{}).value||’#EC4899’;var gp=el(‘gp’);if(gp)gp.style.background=‘linear-gradient(135deg,’+p+’,’+a+’)’;}
+function saveColors(){
+Promise.all([SSet(‘primary_color’,el(‘c1’).value),SSet(‘accent_color’,el(‘c2’).value),SSet(‘bg_color’,el(‘c3’).value),SSet(‘card_color’,el(‘c4’).value)])
+.then(function(){toast(‘Colors saved’,true);}).catch(function(){toast(‘Error’,false);});
+}
+function saveFonts(){Promise.all([SSet(‘font_heading’,val(‘fh’)),SSet(‘font_body’,val(‘fb’))]).then(function(){toast(‘Fonts saved’,true);});}
+
+// SITE TEXT
+function loadStext() {
+var keys=[‘hero_title’,‘hero_sub’,‘hero_desc’,‘btn1’,‘btn2’,‘sitename’,‘tagline’,‘whatsapp’,‘email’,‘facebook’,‘instagram’,‘twitter’,‘tiktok’,‘basic_name’,‘basic_price’,‘basic_desc’,‘basic_perks’,‘premium_name’,‘premium_price’,‘premium_desc’,‘premium_perks’,‘premium_badge’,‘bundle_name’,‘bundle_price’,‘bundle_desc’,‘bundle_perks’,‘bundle_badge’,‘footer_tag’,‘copyright’];
+GET(‘settings’,‘key=in.(’+keys.map(function(k){return ‘”’+k+’”’;}).join(’,’)+’)’+’&select=key,value’).then(function(d){
+(d||[]).forEach(function(s){var e=el(‘st-’+s.key);if(e)e.value=s.value||’’;});
+}).catch(function(){});
+}
+function saveST(keysStr) {
+var keys=keysStr.split(’,’);
+Promise.all(keys.map(function(k){var e=el(‘st-’+k);return e?SSet(k,e.value):Promise.resolve();}))
+.then(function(){toast(‘Saved’,true);}).catch(function(){toast(‘Error’,false);});
+}
+
+// FEATURES
+var FEATS=[
+{k:‘maintenance_mode’,l:‘Maintenance Mode’,d:‘Hides site from all visitors’},
+{k:‘ai_counsellor’,l:‘AI Counsellor’,d:‘Chat assistant on student site’},
+{k:‘payments_enabled’,l:‘Payments Enabled’,d:‘Allow students to subscribe and pay’},
+{k:‘registration_open’,l:‘Registration Open’,d:‘Allow new account creation’},
+{k:‘show_scholarships’,l:‘Scholarships Page’,d:‘Show scholarships section’},
+{k:‘show_news’,l:‘News Page’,d:‘Show news section’},
+{k:‘show_rankings’,l:‘Rankings’,d:‘Show university rankings’},
+{k:‘show_compare’,l:‘Compare Tool’,d:‘Allow comparing universities’},
+{k:‘show_calculator’,l:‘Calculator’,d:‘Show aggregate score calculator’},
+{k:‘show_forms’,l:‘Admission Forms’,d:‘Show admission forms tracker’},
+{k:‘announcement_bar’,l:‘Announcement Bar’,d:‘Banner at top of student site’}
+];
+function loadFeats() {
+GET(‘settings’,‘key=in.(’+FEATS.map(function(f){return ‘”’+f.k+’”’;}).join(’,’)+’)’+’&select=key,value’).then(function(d){
+var vals={}; (d||[]).forEach(function(s){vals[s.k]=s.value===‘true’;});
+var e=el(‘feat-body’); if(!e) return;
+e.innerHTML=FEATS.map(function(f){
+var on=vals[f.k];
+return ‘<div class="row"><div><h4>’+f.l+’</h4><p>’+f.d+’</p></div>’
++’<button class="tg'+(on?' on':'')+'" id="ft-'+f.k+'" onclick="featToggle(\''+f.k+'\',this)">’
++’<div class="td" style="left:'+(on?'21px':'3px')+'"></div></button></div>’;
+}).join(’’);
+}).catch(function(){var e=el(‘feat-body’);if(e)e.innerHTML=’<p style="color:#475569">settings table not found in database.</p>’;});
+}
+function featToggle(k,btn){
+var v=!btn.classList.contains(‘on’);
+btn.classList.toggle(‘on’);
+btn.querySelector(’.td’).style.left=v?‘21px’:‘3px’;
+SSet(k,String(v)).then(function(){toast((v?‘Enabled’:‘Disabled’),true);}).catch(function(){toast(‘Error’,false);});
+}
+
+// PAYSTACK
+function pkLoad() {
+GET(‘settings’,‘key=in.(“pk_test_pub”,“pk_live_pub”,“pk_live_mode”,“subscription_price”,“subscription_currency”)&select=key,value’).then(function(d){
+var v={}; (d||[]).forEach(function(s){v[s.key]=s.value;});
+if(v.pk_test_pub)el(‘pk1’).value=v.pk_test_pub;
+if(v.pk_live_pub)el(‘pk3’).value=v.pk_live_pub;
+if(v.subscription_price)el(‘sp1’).value=v.subscription_price;
+if(v.subscription_currency)el(‘sp2’).value=v.subscription_currency||‘GHS’;
+var live=v.pk_live_mode===‘true’;
+var tog=el(‘pk-tog’),bdg=el(‘pk-b’);
+if(tog){if(live)tog.classList.add(‘on’);else tog.classList.remove(‘on’);tog.querySelector(’.td’).style.left=live?‘21px’:‘3px’;}
+if(bdg){bdg.textContent=live?‘Live Mode’:‘Test Mode’;bdg.style.color=live?’#6ee7b7’:’#fcd34d’;}
+}).catch(function(){});
+}
+function pkToggle(btn){
+var v=!btn.classList.contains(‘on’);
+btn.classList.toggle(‘on’);btn.querySelector(’.td’).style.left=v?‘21px’:‘3px’;
+var b=el(‘pk-b’);if(b){b.textContent=v?‘Live Mode’:‘Test Mode’;b.style.color=v?’#6ee7b7’:’#fcd34d’;}
+}
+function pkSave(){
+var live=el(‘pk-tog’).classList.contains(‘on’);
+var saves=[SSet(‘pk_test_pub’,val(‘pk1’).trim()),SSet(‘pk_live_pub’,val(‘pk3’).trim()),SSet(‘pk_live_mode’,String(live))];
+var ts=val(‘pk2’).trim(),ls=val(‘pk4’).trim();
+if(ts)saves.push(SSet(‘pk_test_sec’,ts));
+if(ls)saves.push(SSet(‘pk_live_sec’,ls));
+Promise.all(saves).then(function(){toast(‘Keys saved’,true);}).catch(function(){toast(‘Error’,false);});
+}
+function spSave(){Promise.all([SSet(‘subscription_price’,val(‘sp1’)),SSet(‘subscription_currency’,val(‘sp2’))]).then(function(){toast(‘Price saved’,true);});}
+
+// START
+document.addEventListener(‘DOMContentLoaded’, function() {
+// Tab click via event delegation - works on iPhone Safari
+document.querySelector(’.tabs’).addEventListener(‘click’, function(e) {
+var btn = e.target;
+while (btn && !btn.dataset.tab) btn = btn.parentElement;
+if (btn && btn.dataset.tab) go(btn.dataset.tab);
+});
+loadDash();
+});
+</script>
+
+</body>
+</html>
