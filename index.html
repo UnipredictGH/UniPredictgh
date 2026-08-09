@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UniPredict Ghana — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--pur:#7C3AED;--pink:#EC4899;--grn:#10b981;--red:#ef4444;--amb:#f59e0b;--blu:#3b82f6;--surf:#161625;--surf2:#1e1e32;--surf3:#252540;--bdr:rgba(255,255,255,.07);--bdr2:rgba(255,255,255,.12);--t1:#f1f5f9;--t2:#94a3b8;--t3:#475569;--grad:linear-gradient(135deg,#7C3AED,#EC4899)}
+html,body{height:100%;color-scheme:dark}
+body{font-family:Inter,sans-serif;background:#0f0f1a;color:#e2e8f0;-webkit-font-smoothing:antialiased}
+.layout{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:248px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--bdr);display:flex;flex-direction:column;overflow-y:auto}
+.s-logo{padding:20px;border-bottom:1px solid var(--bdr)}
+.s-logo h1{font-family:Outfit,sans-serif;font-size:16px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.s-logo p{font-size:11px;color:var(--t3);margin-top:2px}
+.nav-sec{padding:6px 0}
+.nav-lbl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1px;padding:10px 18px 4px}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 18px;cursor:pointer;font-size:13.5px;font-weight:500;color:var(--t2);border-left:2px solid transparent;transition:all .15s;position:relative}
+.ni:hover{color:var(--t1);background:rgba(124,58,237,.08)}
+.ni.on{color:#fff;background:rgba(124,58,237,.15);border-left-color:var(--pur);font-weight:600}
+.ni .ic{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.ni .bdg{position:absolute;right:14px;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;display:none}
+.s-foot{margin-top:auto;padding:14px 18px;border-top:1px solid var(--bdr)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:54px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;background:var(--surf)}
+.topbar h2{font-family:Outfit,sans-serif;font-size:17px;font-weight:800;color:var(--t1)}
+.content{flex:1;overflow-y:auto;padding:24px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.sc{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:16px}
+.sv{font-family:Outfit,sans-serif;font-size:28px;font-weight:900;color:var(--t1);line-height:1}
+.sl{font-size:12px;color:var(--t2);margin-top:4px}
+.acard{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.acard-hd{padding:14px 18px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.acard-hd h3{font-family:Outfit,sans-serif;font-size:14px;font-weight:800;color:var(--t1)}
+.acard-body{padding:18px}
+.abtn{display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer;font-family:Inter,sans-serif;font-weight:600;border-radius:8px;transition:all .15s;white-space:nowrap;font-size:13px;text-decoration:none}
+.abtn:disabled{opacity:.4;cursor:not-allowed}
+.ab-g{background:var(--grad);color:#fff;padding:8px 16px}
+.ab-g:hover{opacity:.88}
+.ab-sec{background:rgba(124,58,237,.15);color:#a78bfa;border:1px solid rgba(124,58,237,.3);padding:7px 13px}
+.ab-red{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);padding:7px 13px}
+.ab-grn{background:rgba(16,185,129,.15);color:#6ee7b7;border:1px solid rgba(16,185,129,.3);padding:7px 13px}
+.ab-amb{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.3);padding:7px 13px}
+.ab-ghost{background:transparent;color:var(--t2);border:1px solid var(--bdr);padding:7px 13px}
+.ab-ghost:hover{color:var(--t1)}
+.ab-full{width:100%;justify-content:center;display:flex}
+.ainp{width:100%;padding:9px 12px;background:var(--surf2);border:1px solid var(--bdr);border-radius:8px;color:var(--t1);font-size:13.5px;font-family:Inter,sans-serif;outline:none}
+.ainp:focus{border-color:var(--pur);box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+.ainp::placeholder{color:var(--t3)}
+.asel{width:100%;padding:9px 12px;background:var(--surf2);border:1px solid var(--bdr);border-radius:8px;color:var(--t1);font-size:13.5px;font-family:Inter,sans-serif;outline:none;cursor:pointer}
+.ata{width:100%;padding:9px 12px;background:var(--surf2);border:1px solid var(--bdr);border-radius:8px;color:var(--t1);font-size:13px;font-family:Inter,sans-serif;outline:none;resize:vertical;min-height:80px}
+.albl{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:4px;display:block}
+.afg{margin-bottom:12px}
+.atbl{width:100%;border-collapse:collapse;font-size:13px}
+.atbl th{padding:9px 12px;text-align:left;font-size:10.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid var(--bdr)}
+.atbl td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle}
+.atbl tr:hover td{background:rgba(255,255,255,.02)}
+.abg{display:inline-flex;align-items:center;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap}
+.abg-pur{background:rgba(124,58,237,.2);color:#a78bfa}
+.abg-grn{background:rgba(16,185,129,.15);color:#6ee7b7}
+.abg-red{background:rgba(239,68,68,.15);color:#fca5a5}
+.abg-amb{background:rgba(245,158,11,.15);color:#fcd34d}
+.abg-gray{background:rgba(255,255,255,.08);color:var(--t2)}
+.abg-blu{background:rgba(59,130,246,.15);color:#93c5fd}
+.amov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:500;padding:20px;backdrop-filter:blur(4px)}
+.amov.on{display:flex}
+.amodal{background:var(--surf);border:1px solid var(--bdr2);border-radius:14px;padding:24px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;position:relative}
+.amodal h3{font-family:Outfit,sans-serif;font-size:17px;font-weight:800;color:var(--t1);margin-bottom:16px}
+.mcls{position:absolute;top:14px;right:16px;background:none;border:none;cursor:pointer;font-size:20px;color:var(--t3)}
+.tog{width:42px;height:23px;background:rgba(255,255,255,.1);border-radius:99px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;border:none;display:inline-block}
+.tog.on{background:var(--pur)}
+.tog-dot{width:17px;height:17px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:left .2s;pointer-events:none}
+.tog.on .tog-dot{left:22px}
+.ag2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ag3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.srch{position:relative;margin-bottom:14px}
+.srch input{padding-left:34px}
+.srch::before{content:"🔍";position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none}
+.toasts{position:fixed;bottom:20px;right:20px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(--surf2);border:1px solid var(--bdr2);border-radius:8px;padding:11px 15px;font-size:13px;color:var(--t1);display:flex;align-items:center;gap:10px;min-width:220px;box-shadow:0 4px 24px rgba(0,0,0,.5);animation:tin .2s ease}
+@keyframes tin{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+.set-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.set-row:last-child{border-bottom:none}
+.set-info h4{font-size:13.5px;font-weight:600;color:var(--t1)}
+.set-info p{font-size:12px;color:var(--t3);margin-top:2px}
+.set-sec-title{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--bdr)}
+.chat-msg{background:var(--surf2);border:1px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:10px}
+.pag{display:flex;align-items:center;gap:6px;margin-top:14px;justify-content:center;flex-wrap:wrap}
+.pag button{padding:5px 10px;border-radius:6px;border:1px solid var(--bdr);background:var(--surf2);color:var(--t2);font-size:12.5px;cursor:pointer}
+.pag button.on{background:var(--pur);color:#fff;border-color:var(--pur)}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="s-logo">
+      <h1>UniPredict Admin</h1>
+      <p>Control Panel</p>
+    </div>
+    <div id="sidebar-nav"></div>
+    <div class="s-foot">
+      <a href="https://uni-predict.netlify.app" target="_blank" style="display:block;font-size:12px;color:var(--t2);text-decoration:none;margin-bottom:10px">🌐 View Student Site ↗</a>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <h2 id="page-title">Dashboard</h2>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:7px;height:7px;border-radius:50%;background:var(--grn)"></div>
+        <span style="font-size:12px;color:var(--grn);font-weight:600">Live</span>
+      </div>
+    </div>
+    <div class="content" id="main-content">
+      <div style="text-align:center;padding:60px;color:var(--t2)">Loading...</div>
+    </div>
+  </div>
+</div>
+
+<div class="amov" id="a-modal">
+  <div class="amodal">
+    <button class="mcls" onclick="closeModal()">✕</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+var SURL="https://urfqevstrwsrtysbllah.supabase.co";
+var SKEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyZnFldnN0cndzcnR5c2JsbGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzNTQ5OTQsImV4cCI6MjEwMDkzMDk5NH0.9TPgghMQdHjqwRm51dEVHJ6O115FPBoYBfZHO_siTYI";
+
+function H(){return{"apikey":SKEY,"Authorization":"Bearer "+SKEY,"Content-Type":"application/json"};}
+function sbGet(t,q){return fetch(SURL+"/rest/v1/"+t+"?"+(q||"")+"&limit=1000",{headers:H()}).then(r=>r.json());}
+function sbPost(t,b){return fetch(SURL+"/rest/v1/"+t,{method:"POST",headers:Object.assign(H(),{"Prefer":"return=representation"}),body:JSON.stringify(b)}).then(r=>r.json());}
+function sbPatch(t,id,b){return fetch(SURL+"/rest/v1/"+t+"?id=eq."+id,{method:"PATCH",headers:Object.assign(H(),{"Prefer":"return=representation"}),body:JSON.stringify(b)}).then(r=>r.json());}
+function sbDelete(t,id){return fetch(SURL+"/rest/v1/"+t+"?id=eq."+id,{method:"DELETE",headers:H()});}
+function sgGet(k){return fetch(SURL+"/rest/v1/settings?key=eq."+k+"&select=value",{headers:H()}).then(r=>r.json()).then(d=>d&&d[0]?d[0].value:null);}
+function sgSet(k,v){return fetch(SURL+"/rest/v1/settings?key=eq."+k,{method:"PATCH",headers:Object.assign(H(),{"Prefer":"return=representation"}),body:JSON.stringify({value:v,updated_at:new Date().toISOString()})}).then(r=>r.json()).then(d=>{if(!d||!d.length)return fetch(SURL+"/rest/v1/settings",{method:"POST",headers:Object.assign(H(),{"Prefer":"return=representation"}),body:JSON.stringify({key:k,value:v})}).then(r=>r.json());return d;});}
+
+var NAV=[
+  {sec:"Overview",items:[{id:"dashboard",ic:"📊",lbl:"Dashboard"}]},
+  {sec:"Content",items:[
+    {id:"universities",ic:"🏛️",lbl:"Universities"},
+    {id:"programmes",ic:"📚",lbl:"Programmes"},
+    {id:"scholarships",ic:"🎓",lbl:"Scholarships"},
+    {id:"news",ic:"📰",lbl:"News"},
+    {id:"forms",ic:"📝",lbl:"Admission Forms"},
+    {id:"announcements",ic:"📢",lbl:"Announcements"}
+  ]},
+  {sec:"AI Inbox",items:[{id:"ai-inbox",ic:"🤖",lbl:"AI Inbox",bdg:true}]},
+  {sec:"Business",items:[
+    {id:"payments",ic:"💳",lbl:"Payments"},
+    {id:"users",ic:"👥",lbl:"Users"}
+  ]},
+  {sec:"Site Control",items:[
+    {id:"appearance",ic:"🎨",lbl:"Appearance"},
+    {id:"sitetext",ic:"✏️",lbl:"Edit Site Text"},
+    {id:"features",ic:"🔧",lbl:"Features & Toggles"},
+    {id:"paystack",ic:"🔑",lbl:"Paystack Keys"},
+    {id:"settings",ic:"⚙️",lbl:"Settings"}
+  ]}
+];
+var TITLES={dashboard:"Dashboard",universities:"Universities",programmes:"Programmes",scholarships:"Scholarships",news:"News",forms:"Admission Forms",announcements:"Announcements","ai-inbox":"AI Counsellor Inbox",payments:"Payments",users:"Users",appearance:"Appearance",sitetext:"Edit Site Text",features:"Features & Toggles",paystack:"Paystack Keys",settings:"Settings"};
+var CUR="dashboard";
+var AI_COUNT=0;
+
+function renderNav(){
+  document.getElementById("sidebar-nav").innerHTML=NAV.map(s=>
+    "<div class='nav-sec'><div class='nav-lbl'>"+s.sec+"</div>"+
+    s.items.map(it=>"<div class='ni"+(CUR===it.id?" on":"")+"' onclick='go(\""+it.id+"\")'><span class='ic'>"+it.ic+"</span>"+it.lbl+(it.bdg?"<span class='bdg' id='ai-bdg'>"+AI_COUNT+"</span>":"")+  "</div>").join("")+"</div>"
+  ).join("");
+  var b=document.getElementById("ai-bdg");
+  if(b){b.style.display=AI_COUNT>0?"inline":"none";}
+}
+
+function go(id){
+  CUR=id;renderNav();
+  var t=document.getElementById("page-title");
+  if(t)t.textContent=TITLES[id]||id;
+  var fns={dashboard:pgDash,universities:pgUnis,programmes:pgProgs,scholarships:pgSchols,news:pgNews,forms:pgForms,announcements:pgAnns,"ai-inbox":pgAI,payments:pgPays,users:pgUsers,appearance:pgAppear,sitetext:pgSiteText,features:pgFeatures,paystack:pgPaystack,settings:pgSettings};
+  if(fns[id])fns[id]();
+}
+
+function toast(msg,type){
+  var ic={success:"✅",error:"❌",info:"ℹ️",warn:"⚠️"};
+  var el=document.createElement("div");el.className="toast";
+  el.innerHTML=(ic[type]||"ℹ️")+" "+msg;
+  document.getElementById("toasts").appendChild(el);
+  setTimeout(()=>el.remove(),3500);
+}
+function openModal(html){document.getElementById("modal-body").innerHTML=html;document.getElementById("a-modal").classList.add("on");}
+function closeModal(){document.getElementById("a-modal").classList.remove("on");}
+function mc(el){return document.getElementById("main-content").innerHTML=el,"<div id='main-content'>"+el+"</div>",(document.getElementById("main-content").innerHTML=el,el);}
+
+// ── DASHBOARD ──
+function pgDash(){
+  document.getElementById("main-content").innerHTML=`
+  <div class="stat-grid">
+    <div class="sc"><div style="font-size:22px;margin-bottom:6px">👥</div><div class="sv" id="d-users">—</div><div class="sl">Total Users</div></div>
+    <div class="sc"><div style="font-size:22px;margin-bottom:6px">💰</div><div class="sv" id="d-rev">—</div><div class="sl">Revenue (GHC)</div></div>
+    <div class="sc"><div style="font-size:22px;margin-bottom:6px">🏛️</div><div class="sv" id="d-unis">—</div><div class="sl">Universities</div></div>
+    <div class="sc"><div style="font-size:22px;margin-bottom:6px">📚</div><div class="sv" id="d-progs">—</div><div class="sl">Programmes</div></div>
+    <div class="sc"><div style="font-size:22px;margin-bottom:6px">⏳</div><div class="sv" id="d-pend">—</div><div class="sl">Pending Payments</div></div>
+    <div class="sc"><div style="font-size:22px;margin-bottom:6px">🤖</div><div class="sv" id="d-ai">—</div><div class="sl">AI Unanswered</div></div>
+  </div>
+  <div class="acard"><div class="acard-hd"><h3>Quick Actions</h3></div>
+  <div class="acard-body" style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="abtn ab-g" onclick="go('universities')">🏛️ Universities</button>
+    <button class="abtn ab-sec" onclick="go('programmes')">📚 Programmes</button>
+    <button class="abtn ab-sec" onclick="go('ai-inbox')">🤖 AI Inbox</button>
+    <button class="abtn ab-sec" onclick="go('payments')">💳 Payments</button>
+    <button class="abtn ab-sec" onclick="go('appearance')">🎨 Appearance</button>
+    <button class="abtn ab-sec" onclick="go('paystack')">🔑 Paystack Keys</button>
+    <button class="abtn ab-sec" onclick="go('features')">🔧 Toggles</button>
+    <button class="abtn ab-sec" onclick="go('sitetext')">✏️ Edit Text</button>
+  </div></div>`;
+  Promise.all([
+    sbGet("profiles","select=id"),
+    sbGet("payments","status=eq.success&select=amount"),
+    sbGet("universities","active=eq.true&select=id"),
+    sbGet("programmes","active=eq.true&select=id"),
+    sbGet("payments","status=eq.pending&select=id"),
+    sbGet("ai_inbox","status=eq.pending&select=id")
+  ]).then(([u,p,un,pr,pe,ai])=>{
+    var rev=(p||[]).reduce((s,x)=>s+(x.amount||0),0);
+    [{id:"d-users",v:(u||[]).length},{id:"d-rev",v:"GHC "+Math.round(rev/100)},{id:"d-unis",v:(un||[]).length},{id:"d-progs",v:(pr||[]).length},{id:"d-pend",v:(pe||[]).length},{id:"d-ai",v:(ai||[]).length}]
+    .forEach(x=>{var e=document.getElementById(x.id);if(e)e.textContent=x.v;});
+    AI_COUNT=(ai||[]).length;renderNav();
+  }).catch(()=>{});
+}
+
+// ── UNIVERSITIES ──
+var allUnis=[],progCounts={};
+function pgUnis(){
+  document.getElementById("main-content").innerHTML=`
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div><h3 style="font-family:Outfit,sans-serif;font-weight:800;font-size:17px;color:var(--t1)">Universities</h3>
+    <p id="uni-ct" style="font-size:12px;color:var(--t2);margin-top:2px">Loading...</p></div>
+    <button class="abtn ab-g" onclick="uniModal(null)">+ Add University</button>
+  </div>
+  <div class="srch"><input class="ainp" placeholder="Search..." oninput="uniFilter(this.value)"/></div>
+  <div class="acard"><table class="atbl">
+    <thead><tr><th>Code</th><th>Name</th><th>Type</th><th>Region</th><th>Status</th><th>Progs</th><th>Actions</th></tr></thead>
+    <tbody id="uni-tb"></tbody>
+  </table></div>`;
+  Promise.all([sbGet("universities","order=name.asc&select=*"),sbGet("programmes","select=university_id")]).then(([unis,progs])=>{
+    allUnis=unis||[];
+    progCounts={};(progs||[]).forEach(p=>progCounts[p.university_id]=(progCounts[p.university_id]||0)+1);
+    allUnis.forEach(u=>u._pc=progCounts[u.id]||0);
+    uniRows(allUnis);
+    var c=document.getElementById("uni-ct");if(c)c.textContent=allUnis.length+" universities";
+  }).catch(()=>{var tb=document.getElementById("uni-tb");if(tb)tb.innerHTML="<tr><td colspan='7' style='padding:30px;text-align:center;color:var(--t2)'>Error loading data</td></tr>";});
+}
+function uniRows(data){
+  var tb=document.getElementById("uni-tb");if(!tb)return;
+  if(!data.length){tb.innerHTML="<tr><td colspan='7' style='padding:30px;text-align:center;color:var(--t2)'>None found</td></tr>";return;}
+  tb.innerHTML=data.map(u=>`<tr>
+    <td><span class="abg abg-pur">${u.code}</span></td>
+    <td style="font-weight:600;color:var(--t1);max-width:180px">${u.name}</td>
+    <td><span class="abg ${u.type==="Public"?"abg-grn":u.type==="Private"?"abg-amb":"abg-blu"}">${u.type||"—"}</span></td>
+    <td style="color:var(--t2);font-size:12px">${u.region||"—"}</td>
+    <td><span class="abg ${u.active?"abg-grn":"abg-red"}">${u.active?"Active":"Hidden"}</span></td>
+    <td style="color:var(--t2)">${u._pc}</td>
+    <td><div style="display:flex;gap:5px">
+      <button class="abtn ab-ghost" onclick='uniModal(${JSON.stringify(u).replace(/"/g,"&quot;")})'>Edit</button>
+      <button class="abtn ${u.active?"ab-amb":"ab-grn"}" onclick="uniToggle('${u.id}',${!u.active})">${u.active?"Hide":"Show"}</button>
+      <button class="abtn ab-red" onclick="uniDel('${u.id}')">Del</button>
+    </div></td>
+  </tr>`).join("");
+}
+function uniFilter(q){uniRows(q?allUnis.filter(u=>(u.name+u.code+u.region).toLowerCase().includes(q.toLowerCase())):allUnis);}
+function uniToggle(id,v){sbPatch("universities",id,{active:v,updated_at:new Date().toISOString()}).then(()=>{toast(v?"Shown":"Hidden","info");pgUnis();});}
+function uniDel(id){if(!confirm("Delete university?"))return;sbDelete("universities",id).then(()=>{toast("Deleted","info");pgUnis();});}
+function uniModal(u){
+  var regs=["Greater Accra","Ashanti","Central","Eastern","Western","Western North","Volta","Oti","Northern","North East","Savannah","Upper East","Upper West","Bono","Bono East","Ahafo"];
+  openModal(`<h3>${u?"Edit":"Add"} University</h3>
+    <div class="afg"><label class="albl">Code</label><input class="ainp" id="uc" value="${u?u.code:""}" placeholder="e.g. UCC"/></div>
+    <div class="afg"><label class="albl">Full Name</label><input class="ainp" id="un" value="${u?u.name:""}" placeholder="University of Cape Coast"/></div>
+    <div class="afg"><label class="albl">Short Name</label><input class="ainp" id="us" value="${u?u.short_name||"":""}" placeholder="UCC"/></div>
+    <div class="ag2">
+      <div class="afg"><label class="albl">Type</label><select class="asel" id="ut">${["Public","Private","Technical","Distance"].map(t=>`<option ${u&&u.type===t?"selected":""}>${t}</option>`).join("")}</select></div>
+      <div class="afg"><label class="albl">Founded</label><input class="ainp" id="uf" type="number" value="${u?u.founded||"":""}" placeholder="1962"/></div>
+    </div>
+    <div class="ag2">
+      <div class="afg"><label class="albl">City</label><input class="ainp" id="ul" value="${u?u.location||"":""}" placeholder="Cape Coast"/></div>
+      <div class="afg"><label class="albl">Region</label><select class="asel" id="ur">${regs.map(r=>`<option ${u&&u.region===r?"selected":""}>${r}</option>`).join("")}</select></div>
+    </div>
+    <div class="afg"><label class="albl">Website</label><input class="ainp" id="uw" value="${u?u.website||"":""}" placeholder="https://ucc.edu.gh"/></div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="abtn ab-g" onclick="uniSave('${u?u.id:""}')">💾 Save</button>
+      <button class="abtn ab-ghost" onclick="closeModal()">Cancel</button>
+    </div>`);
+}
+function uniSave(id){
+  var code=document.getElementById("uc").value.trim().toUpperCase();
+  var name=document.getElementById("un").value.trim();
+  if(!code||!name){toast("Code and name required","error");return;}
+  var b={code,name,short_name:document.getElementById("us").value.trim()||code,type:document.getElementById("ut").value,location:document.getElementById("ul").value.trim(),region:document.getElementById("ur").value,founded:parseInt(document.getElementById("uf").value)||null,website:document.getElementById("uw").value.trim(),active:true,updated_at:new Date().toISOString()};
+  (id?sbPatch("universities",id,b):sbPost("universities",b)).then(()=>{toast("Saved ✅","success");closeModal();pgUnis();}).catch(()=>toast("Error saving","error"));
+}
+
+// ── PROGRAMMES ──
+var allProgs=[],progUnis=[],filtProgs=[],progPage=0,PER=50;
+function pgProgs(){
+  document.getElementById("main-content").innerHTML=`
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div><h3 style="font-family:Outfit,sans-serif;font-weight:800;font-size:17px;color:var(--t1)">Programmes</h3>
+    <p id="prog-ct" style="font-size:12px;color:var(--t2);margin-top:2px">Loading...</p></div>
+    <button class="abtn ab-g" onclick="progModal(null)">+ Add Programme</button>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+    <div class="srch" style="flex:1;min-width:180px;margin:0"><input class="ainp" id="ps" placeholder="Search programmes..." oninput="progFilter()"/></div>
+    <select class="asel" id="puf" style="width:180px" onchange="progFilter()"><option value="">All Universities</option></select>
+    <select class="asel" id="pdf" style="width:120px" onchange="progFilter()"><option value="">All Degrees</option>${["BSc","BA","BEd","BTech","BBA","LLB","MBChB","HND","Diploma","Certificate"].map(d=>`<option>${d}</option>`).join("")}</select>
+  </div>
+  <div class="acard"><table class="atbl">
+    <thead><tr><th>Uni</th><th>Programme</th><th>Degree</th><th>Cutoff</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody id="prog-tb"></tbody>
+  </table>
+  <div id="prog-pag" style="padding:10px 14px;border-top:1px solid var(--bdr)"></div></div>`;
+  Promise.all([sbGet("programmes","order=created_at.desc&select=*"),sbGet("universities","select=id,code,name,short_name&order=name.asc")]).then(([progs,unis])=>{
+    allProgs=progs||[];filtProgs=allProgs;progUnis=unis||[];progPage=0;
+    var sel=document.getElementById("puf");
+    if(sel)unis.forEach(u=>{var o=document.createElement("option");o.value=u.id;o.textContent=u.short_name||u.code;sel.appendChild(o);});
+    progRows();
+    var c=document.getElementById("prog-ct");if(c)c.textContent=allProgs.length+" programmes";
+  }).catch(()=>{});
+}
+function progFilter(){
+  var q=(document.getElementById("ps")||{}).value||"";
+  var uid=(document.getElementById("puf")||{}).value||"";
+  var deg=(document.getElementById("pdf")||{}).value||"";
+  filtProgs=allProgs.filter(p=>(!q||p.name.toLowerCase().includes(q.toLowerCase()))&&(!uid||p.university_id===uid)&&(!deg||p.degree===deg));
+  progPage=0;progRows();
+}
+function progRows(){
+  var tb=document.getElementById("prog-tb");if(!tb)return;
+  var umap={};progUnis.forEach(u=>umap[u.id]=u.short_name||u.code);
+  var slice=filtProgs.slice(progPage*PER,(progPage+1)*PER);
+  if(!slice.length){tb.innerHTML="<tr><td colspan='6' style='padding:30px;text-align:center;color:var(--t2)'>No programmes found</td></tr>";document.getElementById("prog-pag").innerHTML="";return;}
+  tb.innerHTML=slice.map(p=>`<tr>
+    <td><span class="abg abg-pur">${umap[p.university_id]||"?"}</span></td>
+    <td style="color:var(--t1);font-weight:500;max-width:200px">${p.name}</td>
+    <td><span class="abg abg-gray">${p.degree||"—"}</span></td>
+    <td style="color:var(--t2)">${p.cutoff||"—"}</td>
+    <td><span class="abg ${p.active?"abg-grn":"abg-red"}">${p.active?"Active":"Hidden"}</span></td>
+    <td><div style="display:flex;gap:5px">
+      <button class="abtn ab-ghost" onclick='progModal(${JSON.stringify(p).replace(/"/g,"&quot;")})'>Edit</button>
+      <button class="abtn ${p.active?"ab-amb":"ab-grn"}" onclick="progToggle('${p.id}',${!p.active})">${p.active?"Hide":"Show"}</button>
+      <button class="abtn ab-red" onclick="progDel('${p.id}')">Del</button>
+    </div></td>
+  </tr>`).join("");
+  var pages=Math.ceil(filtProgs.length/PER);
+  var pag=document.getElementById("prog-pag");
+  if(pag&&pages>1)pag.innerHTML="<div class='pag'>"+Array.from({length:Math.min(pages,15)},(_,i)=>`<button class="${i===progPage?"on":""}" onclick="progPage=${i};progRows()">${i+1}</button>`).join("")+"</div>";
+  else if(pag)pag.innerHTML="";
+}
+function progToggle(id,v){sbPatch("programmes",id,{active:v}).then(()=>{var p=allProgs.find(x=>x.id===id);if(p)p.active=v;progRows();toast(v?"Shown":"Hidden","info");});}
+function progDel(id){if(!confirm("Delete programme?"))return;sbDelete("programmes",id).then(()=>{allProgs=allProgs.filter(p=>p.id!==id);filtProgs=filtProgs.filter(p=>p.id!==id);progRows();toast("Deleted","info");});}
+function progModal(p){
+  var uOpts=progUnis.map(u=>`<option value="${u.id}" ${p&&p.university_id===u.id?"selected":""}>${u.name}</option>`).join("");
+  openModal(`<h3>${p?"Edit":"Add"} Programme</h3>
+    <div class="afg"><label class="albl">University</label><select class="asel" id="pu">${uOpts}</select></div>
+    <div class="afg"><label class="albl">Programme Name</label><input class="ainp" id="pn" value="${p?p.name:""}" placeholder="Computer Science"/></div>
+    <div class="ag3">
+      <div class="afg"><label class="albl">Degree</label><select class="asel" id="pd">${["BSc","BA","BEd","BTech","BBA","LLB","MBChB","BDS","PharmD","BPH","HND","Diploma","Certificate"].map(d=>`<option ${p&&p.degree===d?"selected":""}>${d}</option>`).join("")}</select></div>
+      <div class="afg"><label class="albl">Duration</label><input class="ainp" id="pdu" value="${p?p.duration||"":""}" placeholder="4 years"/></div>
+      <div class="afg"><label class="albl">Cut-off</label><input class="ainp" id="pc" type="number" value="${p?p.cutoff||"":""}" placeholder="24"/></div>
+    </div>
+    <div class="afg"><label class="albl">Required Tracks (comma separated)</label><input class="ainp" id="pt" value="${p&&p.required_track?p.required_track.join(", "):""}" placeholder="General Science, Business"/></div>
+    <div class="afg"><label class="albl">Fee</label><input class="ainp" id="pf" value="${p?p.fee||"":""}" placeholder="GHC 3,500+/yr"/></div>
+    <div class="afg"><label class="albl">Careers</label><textarea class="ata" id="pca">${p?p.careers||"":""}</textarea></div>
+
+```
+<div style="display:flex;gap:8px;margin-top:4px">
+  <button class="abtn ab-g" onclick="progSave('${p?p.id:""}')">💾 Save</button>
+  <button class="abtn ab-ghost" onclick="closeModal()">Cancel</button>
+</div>`);
+```
+
+}
+function progSave(id){
+var n=document.getElementById(“pn”).value.trim(),u=document.getElementById(“pu”).value;
+if(!n||!u){toast(“University and name required”,“error”);return;}
+var tracks=document.getElementById(“pt”).value.split(”,”).map(t=>t.trim()).filter(Boolean);
+var b={university_id:u,name:n,degree:document.getElementById(“pd”).value,duration:document.getElementById(“pdu”).value.trim(),cutoff:parseInt(document.getElementById(“pc”).value)||null,required_track:tracks,fee:document.getElementById(“pf”).value.trim(),careers:document.getElementById(“pca”).value.trim(),active:true,updated_at:new Date().toISOString()};
+(id?sbPatch(“programmes”,id,b):sbPost(“programmes”,b)).then(()=>{toast(“Saved ✅”,“success”);closeModal();pgProgs();}).catch(()=>toast(“Error”,“error”));
+}
+
+// ── AI INBOX ──
+function pgAI(){
+document.getElementById(“main-content”).innerHTML=`
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div><h3 style="font-family:Outfit,sans-serif;font-weight:800;font-size:17px;color:var(--t1)">AI Counsellor Inbox</h3>
+    <p style="font-size:12px;color:var(--t2);margin-top:2px">Questions the AI couldn't answer. Reply here — student sees it instantly.</p></div>
+    <div style="display:flex;gap:8px">
+      <select class="asel" id="ai-fil" style="width:130px" onchange="loadAI()"><option value="pending">Unanswered</option><option value="answered">Answered</option><option value="">All</option></select>
+      <button class="abtn ab-sec" onclick="loadAI()">🔄 Refresh</button>
+    </div>
+  </div>
+  <div id="ai-list"><div style="text-align:center;padding:40px;color:var(--t2)">Loading...</div></div>`;
+  loadAI();
+}
+function loadAI(){
+  var st=(document.getElementById("ai-fil")||{}).value;
+  sbGet("ai_inbox",(st?"status=eq."+st:"")+"&order=created_at.desc&select=*").then(msgs=>{
+    AI_COUNT=(msgs||[]).filter(m=>m.status==="pending").length;renderNav();
+    var el=document.getElementById("ai-list");if(!el)return;
+    if(!msgs||!msgs.length){el.innerHTML=`<div style="text-align:center;padding:60px;color:var(--t2)"><div style="font-size:40px;margin-bottom:12px">🤖</div><p>No questions yet.</p></div>`;return;}
+    el.innerHTML=msgs.map(m=>`<div class="chat-msg">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+        <span class="abg ${m.status==="pending"?"abg-red":"abg-grn"}">${m.status==="pending"?"⏳ Unanswered":"✅ Answered"}</span>
+        <span style="font-size:11px;color:var(--t3)">${new Date(m.created_at).toLocaleString()}</span>
+      </div>
+      <div style="font-size:13.5px;color:var(--t1);margin-bottom:6px;line-height:1.5">💬 "${m.question}"</div>
+      <div style="font-size:11.5px;color:var(--t3);margin-bottom:10px">👤 ${m.user_email||"Anonymous"}</div>
+      ${m.status==="answered"&&m.reply?`<div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:8px;padding:10px 12px;font-size:13px;color:#6ee7b7;margin-bottom:8px">✅ Your reply: "${m.reply}"</div>`:""}
+      ${m.status==="pending"?`<div style="display:flex;gap:8px;margin-top:8px">
+        <textarea id="rep-${m.id}" class="ata" style="min-height:60px" placeholder="Type your reply..."></textarea>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="abtn ab-g" onclick="aiReply('${m.id}')">Send ↗</button>
+          <button class="abtn ab-red" onclick="aiDismiss('${m.id}')">Dismiss</button>
+        </div>
+      </div>`:`<button class="abtn ab-ghost" onclick="aiReopen('${m.id}')">↩ Reopen</button>`}
+    </div>`).join("");
+  }).catch(()=>{
+    var el=document.getElementById("ai-list");
+    if(el)el.innerHTML=`<div style="padding:20px">
+      <p style="color:var(--amb);margin-bottom:12px">⚠️ Run this SQL in Supabase to enable AI Inbox:</p>
+      <pre style="background:var(--surf2);padding:14px;border-radius:8px;font-size:12px;overflow:auto;color:var(--t1)">CREATE TABLE IF NOT EXISTS public.ai_inbox (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  question text NOT NULL,
+  user_id uuid,
+  user_email text,
+  status text DEFAULT 'pending',
+  reply text,
+  replied_at timestamptz,
+  created_at timestamptz DEFAULT now()
+);
+GRANT ALL ON public.ai_inbox TO anon;</pre>
+    </div>`;
+  });
+}
+function aiReply(id){var r=(document.getElementById("rep-"+id)||{}).value||"";if(!r.trim()){toast("Type a reply","warn");return;}sbPatch("ai_inbox",id,{reply:r.trim(),status:"answered",replied_at:new Date().toISOString()}).then(()=>{toast("Sent ✅","success");loadAI();});}
+function aiDismiss(id){sbPatch("ai_inbox",id,{status:"answered",reply:"[Dismissed]"}).then(()=>{toast("Dismissed","info");loadAI();});}
+function aiReopen(id){sbPatch("ai_inbox",id,{status:"pending",reply:null}).then(()=>{toast("Reopened","info");loadAI();});}
+
+// ── SCHOLARSHIPS ──
+function pgSchols(){
+document.getElementById(“main-content”).innerHTML=`
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <h3 style="font-family:Outfit,sans-serif;font-weight:800;font-size:17px;color:var(--t1)">Scholarships</h3>
+    <button class="abtn ab-g" onclick="scholModal(null)">+ Add Scholarship</button>
+  </div><div id="schol-list"><div style="text-align:center;padding:30px;color:var(--t2)">Loading...</div></div>`;
+  loadSchols();
+}
+function loadSchols(){
+  sbGet("scholarships","order=created_at.desc&select=*").then(d=>{
+    var el=document.getElementById("schol-list");if(!el)return;
+    if(!d||!d.length){el.innerHTML="<div style='text-align:center;padding:40px;color:var(--t2)'>No scholarships yet.</div>";return;}
+    el.innerHTML=d.map(s=>`<div class="acard"><div class="acard-hd">
+      <div><h3>${s.title}</h3><span style="font-size:12px;color:var(--t2)">${s.provider||""} ${s.deadline?"· Deadline: "+s.deadline:""}</span></div>
+      <div style="display:flex;gap:6px">
+        <span class="abg ${s.active?"abg-grn":"abg-red"}">${s.active?"Active":"Hidden"}</span>
+        <button class="abtn ab-ghost" onclick='scholModal(${JSON.stringify(s).replace(/"/g,"&quot;")})'>Edit</button>
+        <button class="abtn ab-red" onclick="scholDel('${s.id}')">Del</button>
+      </div>
+    </div><div class="acard-body" style="font-size:13px;color:var(--t2)">${s.description||""}</div></div>`).join("");
+  }).catch(()=>{});
+}
+function scholModal(s){
+  openModal(`<h3>${s?"Edit":"Add"} Scholarship</h3>
+    <div class="afg"><label class="albl">Title</label><input class="ainp" id="sc-t" value="${s?s.title:""}" placeholder="GETFund Scholarship"/></div>
+    <div class="afg"><label class="albl">Provider</label><input class="ainp" id="sc-p" value="${s?s.provider||"":""}" placeholder="GETFund"/></div>
+    <div class="ag2">
+      <div class="afg"><label class="albl">Amount</label><input class="ainp" id="sc-a" value="${s?s.amount||"":""}" placeholder="Full tuition"/></div>
+      <div class="afg"><label class="albl">Deadline</label><input class="ainp" id="sc-d" type="date" value="${s?s.deadline||"":""}"/></div>
+    </div>
+    <div class="afg"><label class="albl">Description</label><textarea class="ata" id="sc-desc">${s?s.description||"":""}</textarea></div>
+    <div class="afg"><label class="albl">Apply Link</label><input class="ainp" id="sc-l" value="${s?s.link||"":""}" placeholder="https://..."/></div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="abtn ab-g" onclick="scholSave('${s?s.id:""}')">💾 Save</button>
+      <button class="abtn ab-ghost" onclick="closeModal()">Cancel</button>
+    </div>`);
+}
+function scholSave(id){
+  var t=document.getElementById("sc-t").value.trim();if(!t){toast("Title required","error");return;}
+  var b={title:t,provider:document.getElementById("sc-p").value.trim(),amount:document.getElementById("sc-a").value.trim(),deadline:document.getElementById("sc-d").value||null,description:document.getElementById("sc-desc").value.trim(),link:document.getElementById("sc-l").value.trim(),active:true};
+  (id?sbPatch("scholarships",id,b):sbPost("scholarships",b)).then(()=>{toast("Saved ✅","success");closeModal();loadSchols();}).catch(()=>toast("Error","error"));
+}
+function scholDel(id){if(!confirm("Delete?"))return;sbDelete("scholarships",id).then(()=>{toast("Deleted","info");loadSchols();});}
+
+// ── NEWS ──
+function pgNews(){
+document.getElementById(“main-content”).innerHTML=`
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <h3 style="font-family:Outfit,sans-serif;font-weight:800;font-size:17px;color:var(--t1)">News & Updates</h3>
+    <button class="abtn ab-g" onclick="newsModal(null)">+ Add News</button>
+  </div><div id="news-list"><div style="text-align:center;padding:30px;color:var(--t2)">Loading...</div></div>`;
+  loadNews();
+}
+function loadNews(){
+  sbGet("news","order=created_at.desc&select=*").then(d=>{
+    var el=document.getElementById("news-list");if(!el)return;
+    if(!d||!d.length){el.innerHTML="<div style='text-align:center;padding:40px;color:var(--t2)'>No news yet.</div>";return;}
+    el.innerHTML=d.map(n=>`<div class="acard"><div class="acard-hd">
+      <div><h3>${n.title}</h3><span style="font-size:12px;color:var(--t2)">${n.category||"General"} · ${new Date(n.created_at).toLocaleDateString()}</span></div>
+      <div style="display:flex;gap:6px">
+        ${n.pinned?`<span class="abg abg-amb">📌 Pinned</span>`:""}
+        <span class="abg ${n.active?"abg-grn":"abg-red"}">${n.active?"Live":"Draft"}</span>
+        <button class="abtn ab-ghost" onclick='newsModal(${JSON.stringify(n).replace(/"/g,"&quot;")})'>Edit</button>
+        <button class="abtn ab-red" onclick="newsDel('${n.id}')">Del</button>
+      </div>
+    </div><div class="acard-body" style="font-size:13px;color:var(--t2)">${n.summary||""}</div></div>`).join("");
+  }).catch(()=>{});
+}
+function newsModal(n){
+  openModal(`<h3>${n?"Edit":"Add"} News</h3>
+    <div class="afg"><label class="albl">Title</label><input class="ainp" id="nt" value="${n?n.title:""}" placeholder="News title"/></div>
+    <div class="ag2">
+      <div class="afg"><label class="albl">Category</label><select class="asel" id="nc">${["General","Admissions","Results","Scholarships","Events","Announcements"].map(c=>`<option ${n&&n.category===c?"selected":""}>${c}</option>`).join("")}</select></div>
+      <div class="afg"><label class="albl">Image URL</label><input class="ainp" id="ni" value="${n?n.image_url||"":""}" placeholder="https://..."/></div>
+    </div>
+    <div class="afg"><label class="albl">Summary</label><input class="ainp" id="ns" value="${n?n.summary||"":""}" placeholder="Short description"/></div>
+    <div class="afg"><label class="albl">Full Content</label><textarea class="ata" id="nco" style="min-height:100px">${n?n.content||"":""}</textarea></div>
+    <div class="afg"><label class="albl">Source Link</label><input class="ainp" id="nl" value="${n?n.link||"":""}" placeholder="https://..."/></div>
+    <div class="set-row" style="padding:8px 0">
+      <div class="set-info"><h4>Pin to top</h4></div>
+      <button class="tog ${n&&n.pinned?"on":""}" id="n-pin" onclick="this.classList.toggle('on');this.querySelector('.tog-dot').style.left=this.classList.contains('on')?'22px':'3px'"><div class="tog-dot" style="left:${n&&n.pinned?"22px":"3px"}"></div></button>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="abtn ab-g" onclick="newsSave('${n?n.id:""}')">💾 ${n?"Update":"Publish"}</button>
+      <button class="abtn ab-ghost" onclick="closeModal()">Cancel</button>
+    </div>`);
+}
+function newsSave(id){
+  var t=document.getElementById("nt").value.trim();if(!t){toast("Title required","error");return;}
+  var b={title:t,category:document.getElementById("nc").value,summary:document.getElementById("ns").value.trim(),content:document.getElementById("nco").value.trim(),link:document.getElementById("nl").value.trim(),image_url:document.getElementById("ni").value.trim(),pinned:document.getElementById("n-pin").classList.contains("on"),active:true};
+  (id?sbPatch("news",id,b):sbPost("news",b)).then(()=>{toast("Saved ✅","success");closeModal();loadNews();}).catch(()=>toast("Error","error"));
+}
+function newsDel(id){if(!confirm("Delete?"))return;sbDelete("news",id).then(()=>{toast("Deleted","info");loadNews();});}
+
+// ── ADMISSION FORMS ──
+function pgForms(){
+document.getElementById(“main-content”).innerHTML=`
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <h3 style="font-family:Outfit,sans-serif;font-weight:800;font-size:17px;color:var(--t1)">Admission Forms</h3>
+    <button class="abtn ab-g" onclick="formModal(null)">+ Add Form</button>
+  </div><div id="forms-list"><div style="text-align:center;padding:30px;color:var(--t2)">Loading...</div></div>`;
+  loadForms();
+}
+function loadForms(){
+  Promise.all([sbGet("admission_forms","order=created_at.desc&select=*"),sbGet("universities","select=id,name")]).then(([forms,unis])=>{
+    var el=document.getElementById("forms-list");if(!el)return;
+    var umap={};(unis||[]).forEach(u=>umap[u.id]=u.name);
+    if(!forms||!forms.length){el.innerHTML="<div style='text-align:center;padding:40px;color:var(--t2)'>No forms yet.</div>";return;}
+    el.innerHTML=`<div class="acard"><table class="atbl"><thead><tr><th>University</th><th>Title</th><th>Price</th><th>Deadline</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+    ${forms.map(f=>`<tr>
+      <td style="color:var(--t2);font-size:12px">${umap[f.university_id]||"—"}</td>
+      <td style="color:var(--t1)">${f.title}</td>
+      <td>GHC ${f.price||0}</td>
+      <td style="font-size:12px">${f.deadline||"—"}</td>
+      <td><span class="abg ${f.open?"abg-grn":"abg-red"}">${f.open?"Open":"Closed"}</span></td>
+      <td><div style="display:flex;gap:5px">
+        <button class="abtn ab-ghost" onclick='formModal(${JSON.stringify(f).replace(/"/g,"&quot;")})'>Edit</button>
+        <button class="abtn ${f.open?"ab-red":"ab-grn"}" onclick="formToggle('${f.id}',${!f.open})">${f.open?"Close":"Open"}</button>
+        <button class="abtn ab-red" onclick="formDel('${f.id}')">Del</button>
+      </div></td>
+    </tr>`).join("")}</tbody></table></div>`;
+  }).catch(()=>{});
+}
+function formModal(f){
+  sbGet("universities","select=id,name&order=name.asc").then(unis=>{
+    openModal(`<h3>${f?"Edit":"Add"} Admission Form</h3>
+      <div class="afg"><label class="albl">University</label><select class="asel" id="afu">${(unis||[]).map(u=>`<option value="${u.id}" ${f&&f.university_id===u.id?"selected":""}>${u.name}</option>`).join("")}</select></div>
+      <div class="afg"><label class="albl">Title</label><input class="ainp" id="aft" value="${f?f.title:""}" placeholder="2025/2026 Admission Form"/></div>
+      <div class="ag2">
+        <div class="afg"><label class="albl">Price (GHC)</label><input class="ainp" id="afp" type="number" value="${f?f.price||"":""}" placeholder="150"/></div>
+        <div class="afg"><label class="albl">Deadline</label><input class="ainp" id="afd" type="date" value="${f?f.deadline||"":""}"/></div>
+      </div>
+      <div class="afg"><label class="albl">Form Link</label><input class="ainp" id="afl" value="${f?f.link||"":""}" placeholder="https://..."/></div>
+      <div class="afg"><label class="albl">Notes</label><textarea class="ata" id="afn">${f?f.notes||"":""}</textarea></div>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="abtn ab-g" onclick="formSave('${f?f.id:""}')">💾 Save</button>
+        <button class="abtn ab-ghost" onclick="closeModal()">Cancel</button>
+      </div>`);
+  });
+}
+function formSave(id){
+  var b={university_id:document.getElementById("afu").value,title:document.getElementById("aft").value.trim(),price:parseFloat(document.getElementById("afp").value)||0,deadline:document.getElementById("afd").value||null,link:document.getElementById("afl").value.trim(),notes:document.getElementById("afn").value.trim(),open:true};
+  (id?sbPatch("admission_forms",id,b):sbPost("admission_forms",b)).then(()=>{toast("Saved ✅","success");closeModal();loadForms();}).catch(()=>toast("Error","error"));
+}
+function formToggle(id,v){sbPatch("admission_forms",id,{open:v}).then(()=>{toast(v?"Opened":"Closed","info");loadForms();});}
+function formDel(id){if(!confirm("Delete?"))return;sbDelete("admission_forms",id).then(()=>{toast("Deleted","info");loadForms();});}
+
+// ── ANNOUNCEMENTS ──
+function pgAnns(){
+document.getElementById(“main-content”).innerHTML=`
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div><h3 style="font-family:Outfit,sans-serif;font-weight:800;font-size:17px;color:var(--t1)">Announcements</h3>
+    <p style="font-size:12px;color:var(--t2);margin-top:2px">Banner shown at top of student website</p></div>
+    <button class="abtn ab-g" onclick="annModal(null)">+ Add</button>
+  </div><div id="ann-list"><div style="text-align:center;padding:30px;color:var(--t2)">Loading...</div></div>`;
+  loadAnns();
+}
+function loadAnns(){
+  sbGet("announcements","order=created_at.desc&select=*").then(d=>{
+    var el=document.getElementById("ann-list");if(!el)return;
+    if(!d||!d.length){el.innerHTML="<div style='text-align:center;padding:40px;color:var(--t2)'>No announcements yet.</div>";return;}
+    el.innerHTML=d.map(a=>`<div class="acard"><div class="acard-hd">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:12px;height:12px;border-radius:50%;background:${a.color||"#7C3AED"};display:inline-block"></span>
+        <span style="color:var(--t1);font-weight:600">${a.text}</span>
+      </div>
+      <div style="display:flex;gap:6px">
+        <span class="abg ${a.active?"abg-grn":"abg-red"}">${a.active?"Live":"Hidden"}</span>
+        <button class="abtn ab-ghost" onclick='annModal(${JSON.stringify(a).replace(/"/g,"&quot;")})'>Edit</button>
+        <button class="abtn ${a.active?"ab-amb":"ab-grn"}" onclick="annToggle('${a.id}',${!a.active})">${a.active?"Hide":"Show"}</button>
+        <button class="abtn ab-red" onclick="annDel('${a.id}')">Del</button>
+      </div>
+    </div></div>`).join("");
+  }).catch(()=>{});
+}
+function annModal(a){
+  openModal(`<h3>${a?"Edit":"New"} Announcement</h3>
+    <div class="afg"><label class="albl">Text</label><input class="ainp" id="an-t" value="${a?a.text:""}" placeholder="🎉 UniPredict is now live!"/></div>
+    <div class="ag2">
+      <div class="afg"><label class="albl">Color</label><input type="color" class="ainp" id="an-c" value="${a?a.color||"#7C3AED":"#7C3AED"}" style="height:42px;padding:4px;cursor:pointer"/></div>
+      <div class="afg"><label class="albl">Link (optional)</label><input class="ainp" id="an-l" value="${a?a.link||"":""}" placeholder="https://..."/></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="abtn ab-g" onclick="annSave('${a?a.id:""}')">💾 Save</button>
+      <button class="abtn ab-ghost" onclick="closeModal()">Cancel</button>
+    </div>`);
+}
+function annSave(id){
+  var t=document.getElementById("an-t").value.trim();if(!t){toast("Text required","error");return;}
+  var b={text:t,color:document.getElementById("an-c").value,link:document.getElementById("an-l").value.trim(),active:true};
+  (id?sbPatch("announcements",id,b):sbPost("announcements",b)).then(()=>{toast("Saved ✅","success");closeModal();loadAnns();}).catch(()=>toast("Error","error"));
+}
+function annToggle(id,v){sbPatch("announcements",id,{active:v}).then(()=>{toast(v?"Live ✅":"Hidden","info");loadAnns();});}
+function annDel(id){if(!confirm("Delete?"))return;sbDelete("announcements",id).then(()=>{toast("Deleted","info");loadAnns();});}
+
+// ── PAYMENTS ──
+function pgPays(){
+document.getElementById(“main-content”).innerHTML=`
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div><h3 style="font-family:Outfit,sans-serif;font-weight:800;font-size:17px;color:var(--t1)">Payments</h3>
+    <p id="pay-sum" style="font-size:12px;color:var(--t2);margin-top:2px">Loading...</p></div>
+    <select class="asel" id="pay-fil" style="width:130px" onchange="loadPays()"><option value="">All</option><option value="success">Successful</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="refunded">Refunded</option></select>
+  </div>
+  <div class="acard"><table class="atbl">
+    <thead><tr><th>Date</th><th>User</th><th>Amount</th><th>Reference</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody id="pay-tb"></tbody>
+  </table></div>`;
+  loadPays();
+}
+function loadPays(){
+  var st=(document.getElementById("pay-fil")||{}).value;
+  sbGet("payments",(st?"status=eq."+st:"")+"&order=created_at.desc&select=*").then(d=>{
+    var tb=document.getElementById("pay-tb");if(!tb)return;
+    var total=(d||[]).filter(p=>p.status==="success").reduce((s,p)=>s+(p.amount||0),0);
+    var sm=document.getElementById("pay-sum");if(sm)sm.textContent=(d||[]).length+" records · GHC "+Math.round(total/100)+" collected";
+    if(!d||!d.length){tb.innerHTML="<tr><td colspan='6' style='padding:30px;text-align:center;color:var(--t2)'>No payments</td></tr>";return;}
+    tb.innerHTML=d.map(p=>`<tr>
+      <td style="color:var(--t2);font-size:12px">${new Date(p.created_at).toLocaleDateString()}</td>
+      <td style="color:var(--t1)">${p.user_email||p.user_id||"—"}</td>
+      <td style="font-weight:600;color:var(--t1)">GHC ${((p.amount||0)/100).toFixed(2)}</td>
+      <td style="color:var(--t2);font-size:12px">${p.reference||"—"}</td>
+      <td><span class="abg ${p.status==="success"?"abg-grn":p.status==="pending"?"abg-amb":p.status==="refunded"?"abg-blu":"abg-red"}">${p.status}</span></td>
+      <td><div style="display:flex;gap:5px">
+        ${p.status==="pending"?`<button class="abtn ab-grn" onclick="payApprove('${p.id}')">Approve</button>`:""}
+        ${p.status==="success"?`<button class="abtn ab-ghost" onclick="payRefund('${p.id}')">Refund</button>`:""}
+      </div></td>
+    </tr>`).join("");
+  }).catch(()=>{});
+}
+function payApprove(id){sbPatch("payments",id,{status:"success",verified_at:new Date().toISOString()}).then(()=>{toast("Approved ✅","success");loadPays();});}
+function payRefund(id){if(!confirm("Mark as refunded?"))return;sbPatch("payments",id,{status:"refunded"}).then(()=>{toast("Refunded","info");loadPays();});}
+
+// ── USERS ──
+var _users=[];
+function pgUsers(){
+document.getElementById(“main-content”).innerHTML=`
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div><h3 style="font-family:Outfit,sans-serif;font-weight:800;font-size:17px;color:var(--t1)">Users</h3>
+    <p id="user-ct" style="font-size:12px;color:var(--t2);margin-top:2px">Loading...</p></div>
+    <div class="srch" style="margin:0;width:200px"><input class="ainp" placeholder="Search..." oninput="userFilter(this.value)"/></div>
+  </div>
+  <div class="acard"><table class="atbl">
+    <thead><tr><th>Name</th><th>Email</th><th>Joined</th><th>Paid</th><th>Checks</th><th>Actions</th></tr></thead>
+    <tbody id="user-tb"></tbody>
+  </table></div>`;
+  Promise.all([sbGet("profiles","order=created_at.desc&select=*"),sbGet("payments","status=eq.success&select=user_id,amount"),sbGet("checks","select=user_id")]).then(([u,p,c])=>{
+    var pm={},cm={};
+    (p||[]).forEach(x=>pm[x.user_id]=(pm[x.user_id]||0)+(x.amount||0));
+    (c||[]).forEach(x=>cm[x.user_id]=(cm[x.user_id]||0)+1);
+    _users=(u||[]).map(x=>({...x,_p:pm[x.id]||0,_c:cm[x.id]||0}));
+    var ct=document.getElementById("user-ct");if(ct)ct.textContent=_users.length+" users";
+    userRows(_users);
+  }).catch(()=>{});
+}
+function userFilter(q){userRows(q?_users.filter(u=>(u.email||u.full_name||"").toLowerCase().includes(q.toLowerCase())):_users);}
+function userRows(data){
+  var tb=document.getElementById("user-tb");if(!tb)return;
+  if(!data.length){tb.innerHTML="<tr><td colspan='6' style='padding:30px;text-align:center;color:var(--t2)'>No users</td></tr>";return;}
+  tb.innerHTML=data.map(u=>`<tr>
+    <td style="color:var(--t1);font-weight:500">${u.full_name||u.name||"—"}</td>
+    <td style="color:var(--t2);font-size:12px">${u.email||"—"}</td>
+    <td style="color:var(--t2);font-size:12px">${new Date(u.created_at).toLocaleDateString()}</td>
+    <td style="color:${u._p>0?"var(--grn)":"var(--t3)"}">GHC ${(u._p/100).toFixed(2)}</td>
+    <td style="color:var(--t2)">${u._c}</td>
+    <td><button class="abtn ab-ghost" onclick="userView('${u.id}')">View</button></td>
+  </tr>`).join("");
+}
+function userView(id){
+  var u=_users.find(x=>x.id===id);if(!u)return;
+  sbGet("payments","user_id=eq."+id+"&select=*").then(pays=>{
+    openModal(`<h3>👤 ${u.full_name||u.email||"User"}</h3>
+      <div style="margin-bottom:16px">
+        <div class="set-row"><div class="set-info"><h4>Email</h4></div><span style="color:var(--t2)">${u.email||"—"}</span></div>
+        <div class="set-row"><div class="set-info"><h4>Joined</h4></div><span style="color:var(--t2)">${new Date(u.created_at).toLocaleString()}</span></div>
+        <div class="set-row"><div class="set-info"><h4>Total Paid</h4></div><span style="color:var(--grn)">GHC ${(u._p/100).toFixed(2)}</span></div>
+        <div class="set-row"><div class="set-info"><h4>Checks Done</h4></div><span style="color:var(--t2)">${u._c}</span></div>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;margin-bottom:8px">Payment History</div>
+      ${(pays||[]).length?`<table class="atbl"><thead><tr><th>Date</th><th>Amount</th><th>Status</th></tr></thead><tbody>
+        ${pays.map(p=>`<tr><td>${new Date(p.created_at).toLocaleDateString()}</td><td>GHC ${((p.amount||0)/100).toFixed(2)}</td><td><span class="abg ${p.status==="success"?"abg-grn":"abg-amb"}">${p.status}</span></td></tr>`).join("")}
+        </tbody></table>`:"<p style='color:var(--t3);font-size:13px'>No payments.</p>"}
+      <button class="abtn ab-ghost ab-full" onclick="closeModal()" style="margin-top:16px">Close</button>`);
+  });
+}
+
+// ── APPEARANCE ──
+function pgAppear(){
+document.getElementById(“main-content”).innerHTML=`<div style="max-width:640px">
+
+  <div class="acard"><div class="acard-hd"><h3>🎨 Colors</h3></div><div class="acard-body">
+    <div class="ag2" id="color-fields">
+      ${[["primary_color","Primary Color","#7C3AED"],["accent_color","Accent Color","#EC4899"],["bg_color","Background","#0f0f1a"],["card_color","Card Color","#161625"]].map(([k,l,d])=>`
+      <div class="afg"><label class="albl">${l}</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="color" id="c-${k}" value="${d}" style="width:40px;height:36px;border:1px solid var(--bdr);border-radius:6px;cursor:pointer;background:none;padding:2px"/>
+          <input class="ainp" id="ch-${k}" value="${d}" style="flex:1" oninput="document.getElementById('c-${k}').value=this.value;updateGrad()"/>
+        </div>
+      </div>`).join("")}
+    </div>
+    <div style="height:36px;border-radius:8px;margin-bottom:14px" id="grad-prev" style="background:linear-gradient(135deg,#7C3AED,#EC4899)"></div>
+    <button class="abtn ab-g" onclick="saveColors()">💾 Save Colors</button>
+  </div></div>
+  <div class="acard"><div class="acard-hd"><h3>🔤 Fonts</h3></div><div class="acard-body">
+    <div class="ag2">
+      <div class="afg"><label class="albl">Heading Font</label><select class="asel" id="fh">${["Outfit","Inter","Poppins","Space Grotesk","Sora"].map(f=>`<option>${f}</option>`).join("")}</select></div>
+      <div class="afg"><label class="albl">Body Font</label><select class="asel" id="fb">${["Inter","Outfit","Poppins","DM Sans","Nunito"].map(f=>`<option>${f}</option>`).join("")}</select></div>
+    </div>
+    <button class="abtn ab-g" onclick="saveFonts()">💾 Save Fonts</button>
+  </div></div></div>`;
+  updateGrad();
+  sbGet("settings","key=in.(\"primary_color\",\"accent_color\",\"bg_color\",\"card_color\",\"font_heading\",\"font_body\")&select=key,value").then(d=>{
+    (d||[]).forEach(s=>{
+      var ci=document.getElementById("c-"+s.key),chi=document.getElementById("ch-"+s.key);
+      if(ci)ci.value=s.value;if(chi)chi.value=s.value;
+      if(s.key==="font_heading"){var e=document.getElementById("fh");if(e)e.value=s.value;}
+      if(s.key==="font_body"){var e=document.getElementById("fb");if(e)e.value=s.value;}
+    });
+    updateGrad();
+  }).catch(()=>{});
+  ["primary_color","accent_color"].forEach(k=>document.getElementById("c-"+k).addEventListener("input",function(){document.getElementById("ch-"+k).value=this.value;updateGrad();}));
+}
+function updateGrad(){
+  var p=(document.getElementById("c-primary_color")||{}).value||"#7C3AED";
+  var a=(document.getElementById("c-accent_color")||{}).value||"#EC4899";
+  var gp=document.getElementById("grad-prev");if(gp)gp.style.background="linear-gradient(135deg,"+p+","+a+")";
+}
+function saveColors(){
+  Promise.all([["primary_color","accent_color","bg_color","card_color"].map(k=>sgSet(k,document.getElementById("c-"+k).value))].flat())
+    .then(()=>toast("Colors saved ✅","success")).catch(()=>toast("Error","error"));
+}
+function saveFonts(){
+  Promise.all([sgSet("font_heading",document.getElementById("fh").value),sgSet("font_body",document.getElementById("fb").value)])
+    .then(()=>toast("Fonts saved ✅","success"));
+}
+
+// ── SITE TEXT ──
+var ST_FIELDS=[
+[“hero_title”,“Hero Title”,“PREDICT. MATCH. ACHIEVE.”],[“hero_sub”,“Hero Subtitle”,“Ghana’s #1 University Eligibility Checker”],
+[“hero_desc”,“Hero Description”,“Find out which universities and programmes you qualify for…”],
+[“btn1”,“Primary Button”,“Check My Eligibility”],[“btn2”,“Secondary Button”,“Browse Universities”],
+[“sitename”,“Site Name”,“UniPredict Ghana”],[“tagline”,“Tagline”,“PREDICT. MATCH. ACHIEVE.”],
+[“whatsapp”,“WhatsApp Number”,“0537889150”],[“email”,“Email”,“UniPredictghana@gmail.com”],
+[“facebook”,“Facebook URL”,””],[“instagram”,“Instagram URL”,””],[“twitter”,“Twitter URL”,””],[“tiktok”,“TikTok URL”,””],
+[“price”,“Subscription Price (GHC)”,“20”],[“price_desc”,“Price Description”,“Full access · 1 year”],
+[“perks”,“What You Get (one per line)”,“✅ Unlimited eligibility checks\n✅ AI Counsellor\n✅ Scholarship alerts”],
+[“footer_tag”,“Footer Tagline”,“Empowering Ghanaian Students”],[“copyright”,“Copyright Text”,“© 2025 UniPredict Ghana. All rights reserved.”]
+];
+function pgSiteText(){
+document.getElementById(“main-content”).innerHTML=`<div style="max-width:640px">
+
+  <p style="font-size:13px;color:var(--t2);margin-bottom:16px">Edit every text on the student website. Save each section separately.</p>
+  ${[
+    ["🏠 Hero Section",["hero_title","hero_sub","hero_desc","btn1","btn2"]],
+    ["📞 Contact & Branding",["sitename","tagline","whatsapp","email","facebook","instagram","twitter","tiktok"]],
+    ["💳 Pricing",["price","price_desc","perks"]],
+    ["🦶 Footer",["footer_tag","copyright"]]
+  ].map(([title,keys])=>`<div class="acard"><div class="acard-hd"><h3>${title}</h3></div><div class="acard-body">
+    ${keys.map(k=>{var f=ST_FIELDS.find(x=>x[0]===k);if(!f)return"";var isTA=k==="hero_desc"||k==="perks";
+      return`<div class="afg"><label class="albl">${f[1]}</label>${isTA?`<textarea class="ata" id="st-${k}" placeholder="${f[2]}">${f[2]}</textarea>`:`<input class="ainp" id="st-${k}" value="${f[2]}" placeholder="${f[2]}"/>`}</div>`;
+    }).join("")}
+    <button class="abtn ab-g" onclick="saveST([${keys.map(k=>"'"+k+"'").join(",")}])">💾 Save ${title.replace(/[🏠📞💳🦶] /,"")}</button>
+  </div></div>`).join("")}
+  </div>`;
+  var keys=ST_FIELDS.map(f=>f[0]);
+  sbGet("settings","key=in.("+keys.map(k=>'"'+k+'"').join(",")+")"+"&select=key,value").then(d=>{
+    (d||[]).forEach(s=>{var e=document.getElementById("st-"+s.key);if(e)e.value=s.value||"";});
+  }).catch(()=>{});
+}
+function saveST(keys){
+  Promise.all(keys.map(k=>{var e=document.getElementById("st-"+k);return e?sgSet(k,e.value):Promise.resolve();}))
+    .then(()=>toast("Saved ✅","success")).catch(()=>toast("Error","error"));
+}
+
+// ── FEATURES ──
+var FEATS=[
+{k:“maintenance_mode”,l:“🚧 Maintenance Mode”,d:“Hides site from visitors”},
+{k:“ai_counsellor”,l:“🤖 AI Counsellor”,d:“Chat assistant on student site”},
+{k:“payments_enabled”,l:“💳 Payments”,d:“Allow students to subscribe”},
+{k:“registration_open”,l:“📝 Registration”,d:“Allow new account creation”},
+{k:“show_scholarships”,l:“🎓 Scholarships Page”,d:“Show scholarships section”},
+{k:“show_news”,l:“📰 News Page”,d:“Show news section”},
+{k:“show_rankings”,l:“🏆 Rankings”,d:“Show university rankings”},
+{k:“show_compare”,l:“⚖️ Compare Tool”,d:“Allow comparing universities”},
+{k:“show_calculator”,l:“📐 Calculator”,d:“Show aggregate calculator”},
+{k:“show_forms”,l:“📝 Admission Forms”,d:“Show admission forms tracker”},
+{k:“announcement_bar”,l:“📢 Announcement Bar”,d:“Banner at top of student site”},
+];
+function pgFeatures(){
+document.getElementById(“main-content”).innerHTML=`<div style="max-width:580px">
+
+  <p style="font-size:13px;color:var(--t2);margin-bottom:16px">Toggle features on/off instantly. Changes reflect on student site immediately.</p>
+  <div class="acard" id="feat-list"><div style="text-align:center;padding:30px;color:var(--t2)">Loading...</div></div></div>`;
+  sbGet("settings","key=in.("+FEATS.map(f=>'"'+f.k+'"').join(",")+")"+"&select=key,value").then(d=>{
+    var vals={};(d||[]).forEach(s=>vals[s.key]=s.value==="true");
+    var el=document.getElementById("feat-list");if(!el)return;
+    el.innerHTML="<div class='acard-body'>"+FEATS.map(f=>`<div class="set-row">
+      <div class="set-info"><h4>${f.l}</h4><p>${f.d}</p></div>
+      <button class="tog ${vals[f.k]?"on":""}" id="ft-${f.k}" onclick="featToggle('${f.k}',this)"><div class="tog-dot" style="left:${vals[f.k]?"22px":"3px"}"></div></button>
+    </div>`).join("")+"</div>";
+  }).catch(()=>{var el=document.getElementById("feat-list");if(el)el.innerHTML="<div class='acard-body'><p style='color:var(--t3)'>settings table not found.</p></div>";});
+}
+function featToggle(k,btn){
+  var v=!btn.classList.contains("on");
+  btn.classList.toggle("on");btn.querySelector(".tog-dot").style.left=v?"22px":"3px";
+  sgSet(k,String(v)).then(()=>toast((v?"Enabled":"Disabled")+" ✅","success")).catch(()=>toast("Error","error"));
+}
+
+// ── PAYSTACK ──
+function pgPaystack(){
+document.getElementById(“main-content”).innerHTML=`<div style="max-width:580px">
+
+  <div class="acard"><div class="acard-hd"><h3>🔑 Paystack Keys</h3><span id="pk-badge" class="abg abg-amb">⚙️ Test Mode</span></div><div class="acard-body">
+    <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:12px;margin-bottom:16px;font-size:13px;color:#fcd34d">
+      ⚠️ Only the <strong>Public Key</strong> is used on the student site. Keep secret keys private.
+    </div>
+    <div class="set-sec-title" style="margin-bottom:12px">🧪 Test Keys</div>
+    <div class="afg"><label class="albl">Test Public Key</label><input class="ainp" id="pk-tp" placeholder="pk_test_..."/></div>
+    <div class="afg"><label class="albl">Test Secret Key</label><input class="ainp" id="pk-ts" type="password" placeholder="sk_test_..."/></div>
+    <div class="set-sec-title" style="margin:16px 0 12px">🟢 Live Keys</div>
+    <div class="afg"><label class="albl">Live Public Key</label><input class="ainp" id="pk-lp" placeholder="pk_live_..."/></div>
+    <div class="afg"><label class="albl">Live Secret Key</label><input class="ainp" id="pk-ls" type="password" placeholder="sk_live_..."/></div>
+    <div class="set-row" style="margin:12px 0">
+      <div class="set-info"><h4>Use Live Keys (real payments)</h4><p>Switch on when your Paystack account is approved</p></div>
+      <button class="tog" id="pk-live" onclick="pkToggle(this)"><div class="tog-dot" style="left:3px"></div></button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="abtn ab-g" onclick="pkSave()">💾 Save Keys</button>
+      <button class="abtn ab-sec" onclick="pkLoad()">↺ Reload</button>
+    </div>
+  </div></div>
+  <div class="acard"><div class="acard-hd"><h3>💰 Subscription Price</h3></div><div class="acard-body">
+    <div class="ag2">
+      <div class="afg"><label class="albl">Price (GHC)</label><input class="ainp" id="sub-p" type="number" placeholder="20"/></div>
+      <div class="afg"><label class="albl">Currency</label><select class="asel" id="sub-c"><option value="GHS">GHS (Ghana Cedis)</option><option value="USD">USD</option></select></div>
+    </div>
+    <button class="abtn ab-g" onclick="subSave()">💾 Save Price</button>
+  </div></div></div>`;
+  pkLoad();
+}
+function pkLoad(){
+  sbGet("settings","key=in.(\"pk_test_pub\",\"pk_live_pub\",\"pk_live_mode\",\"subscription_price\",\"subscription_currency\")&select=key,value").then(d=>{
+    var v={};(d||[]).forEach(s=>v[s.key]=s.value);
+    if(v.pk_test_pub)document.getElementById("pk-tp").value=v.pk_test_pub;
+    if(v.pk_live_pub)document.getElementById("pk-lp").value=v.pk_live_pub;
+    if(v.subscription_price)document.getElementById("sub-p").value=v.subscription_price;
+    if(v.subscription_currency)document.getElementById("sub-c").value=v.subscription_currency||"GHS";
+    var live=v.pk_live_mode==="true";
+    var tog=document.getElementById("pk-live"),bdg=document.getElementById("pk-badge");
+    if(tog){tog.classList.toggle("on",live);tog.querySelector(".tog-dot").style.left=live?"22px":"3px";}
+    if(bdg){bdg.textContent=live?"🟢 Live Mode":"⚙️ Test Mode";bdg.className="abg "+(live?"abg-grn":"abg-amb");}
+  }).catch(()=>{});
+}
+function pkToggle(btn){
+  var v=!btn.classList.contains("on");
+  btn.classList.toggle("on");btn.querySelector(".tog-dot").style.left=v?"22px":"3px";
+  var b=document.getElementById("pk-badge");if(b){b.textContent=v?"🟢 Live Mode":"⚙️ Test Mode";b.className="abg "+(v?"abg-grn":"abg-amb");}
+}
+function pkSave(){
+  var live=document.getElementById("pk-live").classList.contains("on");
+  var saves=[sgSet("pk_test_pub",document.getElementById("pk-tp").value.trim()),sgSet("pk_live_pub",document.getElementById("pk-lp").value.trim()),sgSet("pk_live_mode",String(live))];
+  var ts=document.getElementById("pk-ts").value.trim(),ls=document.getElementById("pk-ls").value.trim();
+  if(ts)saves.push(sgSet("pk_test_sec",ts));if(ls)saves.push(sgSet("pk_live_sec",ls));
+  Promise.all(saves).then(()=>toast("Keys saved ✅","success")).catch(()=>toast("Error","error"));
+}
+function subSave(){
+  Promise.all([sgSet("subscription_price",document.getElementById("sub-p").value),sgSet("subscription_currency",document.getElementById("sub-c").value)])
+    .then(()=>toast("Price saved ✅","success"));
+}
+
+// ── SETTINGS ──
+function pgSettings(){
+document.getElementById(“main-content”).innerHTML=`<div style="max-width:580px">
+
+  <div class="acard"><div class="acard-hd"><h3>⚙️ General</h3></div><div class="acard-body">
+    <div class="afg"><label class="albl">Support Email</label><input class="ainp" id="s-email" placeholder="support@unipredict.gh"/></div>
+    <div class="afg"><label class="albl">Free Checks Before Paywall</label><input class="ainp" id="s-free" type="number" placeholder="3"/></div>
+    <button class="abtn ab-g" onclick="settSave()">💾 Save</button>
+  </div></div>
+  <div class="acard"><div class="acard-hd"><h3>🗄️ Database</h3></div><div class="acard-body">
+    <p style="font-size:12px;color:var(--t2);margin-bottom:12px">${SURL}</p>
+    <div style="display:flex;gap:8px">
+      <button class="abtn ab-sec" onclick="dbTest()">🔌 Test Connection</button>
+      <button class="abtn ab-ghost" onclick="dbExport()">📤 Export Summary</button>
+    </div>
+  </div></div></div>`;
+  sbGet("settings","key=in.(\"support_email\",\"free_checks\")&select=key,value").then(d=>{
+    (d||[]).forEach(s=>{var e=document.getElementById(s.key==="support_email"?"s-email":"s-free");if(e)e.value=s.value||"";});
+  }).catch(()=>{});
+}
+function settSave(){
+  Promise.all([sgSet("support_email",document.getElementById("s-email").value),sgSet("free_checks",document.getElementById("s-free").value)])
+    .then(()=>toast("Saved ✅","success")).catch(()=>toast("Error","error"));
+}
+function dbTest(){sbGet("universities","select=id&limit=1").then(d=>toast(d&&d.length?"Connected ✅":"Connected (no data)","success")).catch(()=>toast("Connection failed ❌","error"));}
+function dbExport(){
+  Promise.all([sbGet("universities","select=id"),sbGet("programmes","select=id"),sbGet("profiles","select=id"),sbGet("payments","status=eq.success&select=amount")]).then(([u,pr,us,pa])=>{
+    var rev=(pa||[]).reduce((s,x)=>s+(x.amount||0),0);
+    var txt="UniPredict Ghana Export\n"+new Date().toLocaleString()+"\nUniversities: "+(u||[]).length+"\nProgrammes: "+(pr||[]).length+"\nUsers: "+(us||[]).length+"\nRevenue: GHC "+Math.round(rev/100);
+    var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"text/plain"}));a.download="unipredict-export.txt";a.click();
+  });
+}
+
+// ── START ──
+renderNav();
+// Show dashboard immediately without waiting for data
+document.getElementById(“main-content”).innerHTML=`
+
+  <div class="stat-grid">
+    <div class="sc"><div style="font-size:22px;margin-bottom:6px">👥</div><div class="sv" id="d-users">—</div><div class="sl">Total Users</div></div>
+    <div class="sc"><div style="font-size:22px;margin-bottom:6px">💰</div><div class="sv" id="d-rev">—</div><div class="sl">Revenue (GHC)</div></div>
+    <div class="sc"><div style="font-size:22px;margin-bottom:6px">🏛️</div><div class="sv" id="d-unis">—</div><div class="sl">Universities</div></div>
+    <div class="sc"><div style="font-size:22px;margin-bottom:6px">📚</div><div class="sv" id="d-progs">—</div><div class="sl">Programmes</div></div>
+    <div class="sc"><div style="font-size:22px;margin-bottom:6px">⏳</div><div class="sv" id="d-pend">—</div><div class="sl">Pending Payments</div></div>
+    <div class="sc"><div style="font-size:22px;margin-bottom:6px">🤖</div><div class="sv" id="d-ai">—</div><div class="sl">AI Unanswered</div></div>
+  </div>
+  <div class="acard"><div class="acard-hd"><h3>Quick Actions</h3></div>
+  <div class="acard-body" style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="abtn ab-g" onclick="go('universities')">🏛️ Universities</button>
+    <button class="abtn ab-sec" onclick="go('programmes')">📚 Programmes</button>
+    <button class="abtn ab-sec" onclick="go('ai-inbox')">🤖 AI Inbox</button>
+    <button class="abtn ab-sec" onclick="go('payments')">💳 Payments</button>
+    <button class="abtn ab-sec" onclick="go('appearance')">🎨 Appearance</button>
+    <button class="abtn ab-sec" onclick="go('paystack')">🔑 Paystack Keys</button>
+    <button class="abtn ab-sec" onclick="go('features')">🔧 Toggles</button>
+    <button class="abtn ab-sec" onclick="go('sitetext')">✏️ Edit Text</button>
+  </div></div>`;
+
+// Load stats in background - ignore errors
+sbGet(“universities”,“active=eq.true&select=id”).then(d=>{var e=document.getElementById(“d-unis”);if(e)e.textContent=(d||[]).length;}).catch(()=>{});
+sbGet(“programmes”,“active=eq.true&select=id”).then(d=>{var e=document.getElementById(“d-progs”);if(e)e.textContent=(d||[]).length;}).catch(()=>{});
+sbGet(“payments”,“status=eq.pending&select=id”).then(d=>{var e=document.getElementById(“d-pend”);if(e)e.textContent=(d||[]).length;}).catch(()=>{});
+sbGet(“payments”,“status=eq.success&select=amount”).then(d=>{var e=document.getElementById(“d-rev”);if(e)e.textContent=“GHC “+Math.round((d||[]).reduce((s,x)=>s+(x.amount||0),0)/100);}).catch(()=>{});
+sbGet(“profiles”,“select=id”).then(d=>{var e=document.getElementById(“d-users”);if(e)e.textContent=(d||[]).length;}).catch(()=>{var e=document.getElementById(“d-users”);if(e)e.textContent=”—”;});
+sbGet(“ai_inbox”,“status=eq.pending&select=id”).then(d=>{var e=document.getElementById(“d-ai”);if(e)e.textContent=(d||[]).length;}).catch(()=>{});
+</script>
+
+</body>
+</html>
