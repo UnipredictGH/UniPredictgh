@@ -201,20 +201,23 @@ function calcAgg(track, cg, el, eg) {
   const e=getBest(cg,"eng"), m=getBest(cg,"maths"), sc=getBest(cg,"sci"), so=getBest(cg,"soc");
   const sciTrack = ["General Science","Agricultural Science","Technical"].includes(track);
 
+  // FIXED: Build pool with ONLY the correct 3rd core subject — never both sci and soc
   const pool = [];
   if (e) pool.push(GP2[e]);
   if (m) pool.push(GP2[m]);
 
-  // General display: science tracks use Integrated Science, others use best of both
   if (sciTrack) {
+    // Science/Agricultural/Technical: ONLY Integrated Science — Social Studies NEVER counted
     if (sc) pool.push(GP2[sc]);
   } else {
+    // Arts/Business/Home Ec/Visual Arts: best of Integrated Science OR Social Studies (one only)
     const scPts = sc ? GP2[sc] : 999;
     const soPts = so ? GP2[so] : 999;
     const best = Math.min(scPts, soPts);
     if (best < 999) pool.push(best);
   }
 
+  // Add elective grades — these are the student's chosen elective subjects only
   el.forEach(s => { if (eg[s]) pool.push(GP2[eg[s]]); });
 
   pool.sort((a, b) => a - b);
